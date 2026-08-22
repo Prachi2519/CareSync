@@ -1,4 +1,20 @@
 services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: caresync
+      POSTGRES_USER: caresync
+      # Local-only database on the internal Compose network. Production uses an authenticated managed URL.
+      POSTGRES_HOST_AUTH_METHOD: trust
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U caresync -d caresync"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    volumes:
+      - caresync-postgres-data:/var/lib/postgresql/data
+    restart: unless-stopped
+
   caresync:
     build:
       context: .
@@ -8,10 +24,11 @@ services:
     env_file:
       - .env
     environment:
-      DATABASE_URL: file:/data/caresync.db
+      DATABASE_URL: postgresql://caresync@db:5432/caresync?schema=public
       APP_URL: http://localhost:3000
-    volumes:
-      - caresync-data:/data
+    depends_on:
+      db:
+        condition: service_healthy
     restart: unless-stopped
 
   notification-worker:
@@ -28,4 +45,4 @@ services:
     restart: unless-stopped
 
 volumes:
-  caresync-data:
+  caresync-postgres-data:

@@ -23,12 +23,12 @@ CareSync is a complete role-based healthcare appointment platform for patients, 
 - Automatic notification worker included in Docker Compose
 - Admin doctor profiles, working hours, and conflict-aware leave scheduling
 - Responsive, accessible patient, doctor, and admin portals
-- Docker and Render Blueprint deployment configuration
+- Docker and Vercel deployment configuration
 
 ## Technology
 
 - Next.js 15, React 19, TypeScript
-- Prisma ORM and SQLite
+- Prisma ORM and PostgreSQL
 - Zod validation, bcrypt password hashing, JOSE signed sessions
 - Nodemailer SMTP, Google Calendar REST API with OAuth 2.0
 - Groq Chat Completions API with deterministic fallbacks
@@ -36,7 +36,7 @@ CareSync is a complete role-based healthcare appointment platform for patients, 
 
 ## Quick start
 
-Requirements: Node.js 20+ and pnpm 10+.
+Requirements: Node.js 20+, pnpm 11+, and PostgreSQL 16+.
 
 ```bash
 cp .env.example .env
@@ -55,7 +55,7 @@ Add your secrets to `.env`, then run:
 docker compose up --build
 ```
 
-The Compose configuration exposes port 3000 and stores SQLite data in the persistent `caresync-data` volume. `GROQ_API_KEY` is passed at runtime through `.env`; it is excluded from the Docker build context.
+The Compose configuration exposes port 3000 and stores PostgreSQL data in the persistent `caresync-postgres-data` volume. `GROQ_API_KEY` is passed at runtime through `.env`; it is excluded from the Docker build context.
 
 Demo accounts (all use password `Demo@123`):
 
@@ -73,7 +73,7 @@ Copy `.env.example`; never commit real secrets.
 
 | Variable | Required | Purpose |
 |---|---:|---|
-| `DATABASE_URL` | Yes | Prisma URL. Local default: `file:./dev.db` |
+| `DATABASE_URL` | Yes | Pooled PostgreSQL connection URL |
 | `AUTH_SECRET` | Yes | Random secret (32+ characters) for signed sessions |
 | `APP_URL` | Yes | Public application origin |
 | `CRON_SECRET` | Production | Protects `/api/cron/process` |
@@ -133,7 +133,7 @@ The worker:
 4. Claims up to 50 outbox jobs and delivers email or Calendar changes.
 5. Retries failures up to five times with capped exponential backoff.
 
-Use Render Cron Jobs, Railway cron, GitHub Actions, or another trusted scheduler in production.
+Vercel invokes this endpoint using the schedule in `vercel.json` and automatically sends `Authorization: Bearer $CRON_SECRET`. The committed daily schedule works on Vercel Hobby. For correct multi-dose medication timing, use Vercel Pro and change the schedule to `*/5 * * * *`, or call the same protected endpoint every five minutes from a trusted external scheduler.
 
 Every signed-in user can open **Settings → Notification activity** to inspect recent email and Calendar jobs, send a branded test email to their account address, and requeue failed deliveries. Email bodies intentionally keep clinical details inside the authenticated application.
 
@@ -165,6 +165,7 @@ All request and response bodies are JSON except OAuth redirects.
 | `GET/DELETE` | `/api/integrations/google/status` | Signed in | Inspect/disconnect Calendar |
 | `GET/POST` | `/api/cron/process` | Cron secret | Process reminders and outbox |
 | `GET/POST` | `/api/notifications` | Signed in | View delivery activity, send a test email, or retry a failed job |
+| `GET` | `/api/health` | Public | Verify application and database health |
 
 Errors use `{ "error": "human-readable message" }` and appropriate 4xx/5xx status codes. Validation failures may also include `issues`.
 
@@ -194,16 +195,47 @@ pnpm test
 pnpm build
 ```
 
-## Production deployment
+## Vercel deployment
 
-The included `Dockerfile` runs schema synchronization and the idempotent seed before starting Next.js. SQLite requires persistent storage.
+1. Import `Prachi2519/CareSync` into Vercel and keep the detected Next.js settings.
+2. In the Vercel project, open **Storage**, create a Prisma Postgres (or Neon Postgres) database, and connect it to the project. Confirm that it injects `DATABASE_URL`.
+3. Add the environment variables from the table below to **Production**. Secrets should use Vercel's sensitive-value option.
+4. Deploy. `pnpm vercel-build` generates Prisma Client, applies committed migrations, runs the idempotent assessment seed, and builds Next.js.
+5. Confirm `https://YOUR_PROJECT.vercel.app/api/health` returns `{ "ok": true, "database": "connected" }`.
 
-### Render Blueprint
+| Vercel variable | Production value |
+|---|---|
+| `DATABASE_URL` | Injected by the connected PostgreSQL integration |
+| `AUTH_SECRET` | Output of `openssl rand -base64 32` |
+| `APP_URL` | `https://YOUR_PROJECT.vercel.app` without a trailing slash |
+| `CRON_SECRET` | Separate output of `openssl rand -base64 32` |
+| `GROQ_API_KEY` | Groq API key |
+| `GROQ_MODEL` | `openai/gpt-oss-20b` |
+| `GROQ_BASE_URL` | `https://api.groq.com/openai/v1` |
+| `SMTP_HOST` | `smtp.gmail.com` |
+| `SMTP_PORT` | `587` |
+| `SMTP_SECURE` | `false` |
+| `SMTP_USER` | Gmail sender address |
+| `SMTP_PASSWORD` | Google 16-character App Password, not the normal password |
+| `EMAIL_FROM` | `CareSync <YOUR_GMAIL_ADDRESS>` |
+| `SMTP_REPLY_TO` | Monitored reply-to address |
+| `APP_TIMEZONE` | `Asia/Kolkata` |
+| `GOOGLE_CLIENT_ID` | Google OAuth web client ID |
+| `GOOGLE_CLIENT_SECRET` | Google OAuth client secret |
+| `GOOGLE_REDIRECT_URI` | `https://YOUR_PROJECT.vercel.app/api/integrations/google/callback` |
 
-1. Push the project to a Git repository.
-2. In Render, create a Blueprint from `render.yaml`.
-3. Set `APP_URL` to the assigned HTTPS origin and add optional integration secrets.
-4. Set `GOOGLE_REDIRECT_URI` to that origin plus `/api/integrations/google/callback`.
-5. Create a five-minute cron that calls `/api/cron/process` with the generated `CRON_SECRET`.
+### Production Google Calendar callback
 
-The Blueprint provisions a persistent `/data` disk and sets `DATABASE_URL=file:/data/caresync.db`. Replace demo credentials and seed behavior before handling real patient information. This reference project is not a compliance certification; production healthcare use requires a formal security, privacy, retention, audit, and vendor review.
+In Google Cloud Console, edit the existing OAuth 2.0 **Web application** client. Keep the localhost callback for development and add this exact authorized redirect URI:
+
+```text
+https://YOUR_PROJECT.vercel.app/api/integrations/google/callback
+```
+
+The scheme, host, path, letter case, and trailing slash must match exactly. Set the identical value as `GOOGLE_REDIRECT_URI` in Vercel. If the OAuth consent screen remains in Testing mode, add each patient and doctor Google account under **Test users**. Preview-deployment URLs are intentionally not used for Calendar OAuth because they change per deployment.
+
+### Gmail SMTP
+
+Enable Google 2-Step Verification on the sender account, create an App Password named `CareSync Vercel`, and store that 16-character value as `SMTP_PASSWORD`. Do not use or publish the normal Gmail password. Use port 587 with `SMTP_SECURE=false`; Nodemailer upgrades the connection with STARTTLS.
+
+The Docker image runs committed migrations and the same idempotent seed before starting Next.js. Replace demo credentials and automatic seeding before handling real patient information. This reference project is not a compliance certification; production healthcare use requires a formal security, privacy, retention, audit, and vendor review.

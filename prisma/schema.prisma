@@ -3,7 +3,7 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
@@ -49,40 +49,40 @@ model User {
   name                String
   email               String               @unique
   passwordHash        String
-  role                 Role
-  phone                String?
-  createdAt            DateTime             @default(now())
-  updatedAt            DateTime             @updatedAt
-  doctorProfile        DoctorProfile?
-  patientAppointments  Appointment[]        @relation("PatientAppointments")
-  heldSlots            AppointmentSlot[]    @relation("PatientSlots")
-  notificationJobs     NotificationJob[]
-  medicationReminders  MedicationReminder[]
-  googleConnection     GoogleConnection?
-  calendarEvents       CalendarEventLink[]
+  role                Role
+  phone               String?
+  createdAt           DateTime             @default(now())
+  updatedAt           DateTime             @updatedAt
+  doctorProfile       DoctorProfile?
+  patientAppointments Appointment[]        @relation("PatientAppointments")
+  heldSlots           AppointmentSlot[]    @relation("PatientSlots")
+  notificationJobs    NotificationJob[]
+  medicationReminders MedicationReminder[]
+  googleConnection    GoogleConnection?
+  calendarEvents      CalendarEventLink[]
 }
 
 model DoctorProfile {
-  id                   String               @id @default(cuid())
-  userId               String               @unique
-  specialization       String
-  qualifications       String
-  bio                   String
-  yearsExperience      Int                  @default(0)
-  slotDurationMinutes  Int                  @default(30)
-  workingHours         String               @default("{\"1\":[\"09:00\",\"17:00\"],\"2\":[\"09:00\",\"17:00\"],\"3\":[\"09:00\",\"17:00\"],\"4\":[\"09:00\",\"17:00\"],\"5\":[\"09:00\",\"17:00\"]}")
-  active                Boolean              @default(true)
-  createdAt             DateTime             @default(now())
-  updatedAt             DateTime             @updatedAt
-  user                  User                 @relation(fields: [userId], references: [id], onDelete: Cascade)
-  appointments          Appointment[]
-  slots                 AppointmentSlot[]
-  leaves                DoctorLeave[]
+  id                  String            @id @default(cuid())
+  userId              String            @unique
+  specialization      String
+  qualifications      String
+  bio                 String
+  yearsExperience     Int               @default(0)
+  slotDurationMinutes Int               @default(30)
+  workingHours        String            @default("{\"1\":[\"09:00\",\"17:00\"],\"2\":[\"09:00\",\"17:00\"],\"3\":[\"09:00\",\"17:00\"],\"4\":[\"09:00\",\"17:00\"],\"5\":[\"09:00\",\"17:00\"]}")
+  active              Boolean           @default(true)
+  createdAt           DateTime          @default(now())
+  updatedAt           DateTime          @updatedAt
+  user                User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  appointments        Appointment[]
+  slots               AppointmentSlot[]
+  leaves              DoctorLeave[]
 }
 
 model DoctorLeave {
   id        String        @id @default(cuid())
-  doctorId String
+  doctorId  String
   date      String
   reason    String?
   createdAt DateTime      @default(now())
@@ -112,29 +112,29 @@ model AppointmentSlot {
 }
 
 model Appointment {
-  id                     String             @id @default(cuid())
-  doctorId               String
-  patientId              String
-  slotId                 String?            @unique
-  startTime              DateTime
-  endTime                DateTime
-  status                 AppointmentStatus  @default(SCHEDULED)
-  symptoms               String
-  preVisitSummary        String?
-  urgency                Urgency            @default(UNASSESSED)
-  suggestedQuestions     String?
-  postVisitNotes         String?
-  prescription           String?
-  postVisitSummary       String?
-  cancellationReason     String?
-  createdAt              DateTime           @default(now())
-  updatedAt              DateTime           @updatedAt
-  doctor                 DoctorProfile      @relation(fields: [doctorId], references: [id], onDelete: Restrict)
-  patient                User               @relation("PatientAppointments", fields: [patientId], references: [id], onDelete: Restrict)
-  slot                   AppointmentSlot?   @relation(fields: [slotId], references: [id], onDelete: SetNull)
-  notificationJobs       NotificationJob[]
-  medicationReminders    MedicationReminder[]
-  calendarEvents          CalendarEventLink[]
+  id                  String               @id @default(cuid())
+  doctorId            String
+  patientId           String
+  slotId              String?              @unique
+  startTime           DateTime
+  endTime             DateTime
+  status              AppointmentStatus    @default(SCHEDULED)
+  symptoms            String
+  preVisitSummary     String?
+  urgency             Urgency              @default(UNASSESSED)
+  suggestedQuestions  String?
+  postVisitNotes      String?
+  prescription        String?
+  postVisitSummary    String?
+  cancellationReason  String?
+  createdAt           DateTime             @default(now())
+  updatedAt           DateTime             @updatedAt
+  doctor              DoctorProfile        @relation(fields: [doctorId], references: [id], onDelete: Restrict)
+  patient             User                 @relation("PatientAppointments", fields: [patientId], references: [id], onDelete: Restrict)
+  slot                AppointmentSlot?     @relation(fields: [slotId], references: [id], onDelete: SetNull)
+  notificationJobs    NotificationJob[]
+  medicationReminders MedicationReminder[]
+  calendarEvents      CalendarEventLink[]
 
   @@index([doctorId, startTime])
   @@index([patientId, startTime])
@@ -164,35 +164,35 @@ model NotificationJob {
 }
 
 model MedicationReminder {
-  id                String      @id @default(cuid())
-  appointmentId     String
-  patientId         String
-  medication        String
-  dosage            String
-  instructions      String?
-  frequencyPerDay   Int
-  nextRunAt         DateTime
-  endsAt             DateTime
-  active             Boolean     @default(true)
-  createdAt          DateTime    @default(now())
-  updatedAt          DateTime    @updatedAt
-  appointment        Appointment @relation(fields: [appointmentId], references: [id], onDelete: Cascade)
-  patient            User        @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  id              String      @id @default(cuid())
+  appointmentId   String
+  patientId       String
+  medication      String
+  dosage          String
+  instructions    String?
+  frequencyPerDay Int
+  nextRunAt       DateTime
+  endsAt          DateTime
+  active          Boolean     @default(true)
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+  appointment     Appointment @relation(fields: [appointmentId], references: [id], onDelete: Cascade)
+  patient         User        @relation(fields: [patientId], references: [id], onDelete: Cascade)
 
   @@index([active, nextRunAt])
 }
 
 model GoogleConnection {
-  id           String   @id @default(cuid())
-  userId       String   @unique
+  id           String    @id @default(cuid())
+  userId       String    @unique
   accessToken  String
   refreshToken String?
   expiresAt    DateTime?
   scope        String?
-  calendarId   String   @default("primary")
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
-  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  calendarId   String    @default("primary")
+  createdAt    DateTime  @default(now())
+  updatedAt    DateTime  @updatedAt
+  user         User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
 model CalendarEventLink {
