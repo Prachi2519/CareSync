@@ -40,9 +40,13 @@ describe("CareSync email templates", () => {
 
     expect(patientEmail.html).toContain("Your visit is booked");
     expect(patientEmail.html).toContain("Before your visit");
+    expect(patientEmail.html).not.toContain('data-template="doctor-clinical"');
     expect(doctorEmail.html).toContain("A new visit is on your schedule");
     expect(doctorEmail.html).toContain("Review patient details");
     expect(doctorEmail.html).toContain("Hello Dr. Ananya Mehta");
+    expect(doctorEmail.html).toContain('data-template="doctor-clinical"');
+    expect(doctorEmail.html).toContain("CareSync Clinical Operations");
+    expect(doctorEmail.html).toContain("Patient symptoms and clinical details stay inside the secure CareSync doctor portal");
     expect(doctorEmail.html).not.toContain("Your visit is booked");
   });
 

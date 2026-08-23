@@ -337,6 +337,73 @@ function renderHtml(content: EmailContent) {
 </html>`;
 }
 
+function renderDoctorHtml(content: EmailContent) {
+  const tone = palette[content.tone || "primary"];
+  const details = content.details?.length
+    ? `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:22px 0;border:1px solid #d9e1ea;border-radius:12px;border-collapse:separate;overflow:hidden;background:#f8fafc;">
+        ${content.details.map((detail, index) => `<tr>
+          <td style="padding:13px 16px;${index ? "border-top:1px solid #e5eaf0;" : ""}color:#64748b;font-size:12px;font-weight:700;letter-spacing:.7px;text-transform:uppercase;width:34%;">${escapeHtml(detail.label)}</td>
+          <td style="padding:13px 16px;${index ? "border-top:1px solid #e5eaf0;" : ""}color:#14213d;font-size:15px;font-weight:700;text-align:right;">${escapeHtml(detail.value)}</td>
+        </tr>`).join("")}
+      </table>`
+    : "";
+  const notice = content.notice
+    ? `<div style="margin:20px 0;padding:17px 18px;border:1px solid #c7d8ea;border-radius:12px;background:#eef6ff;">
+        <div style="margin-bottom:5px;color:#173b66;font-size:13px;font-weight:800;">${escapeHtml(content.notice.title)}</div>
+        <div style="color:#486581;font-size:14px;line-height:1.55;">${escapeHtml(content.notice.text)}</div>
+      </div>`
+    : "";
+  const cta = content.cta
+    ? `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="margin:25px 0 8px;"><tr><td align="center" style="border-radius:10px;background:#1d4ed8;">
+        <a href="${safeUrl(content.cta.url)}" style="display:block;padding:14px 22px;color:#ffffff;font-size:15px;font-weight:800;text-decoration:none;">${escapeHtml(content.cta.label)}</a>
+      </td></tr></table>`
+    : "";
+
+  return `<!doctype html>
+<html lang="en" data-template="doctor-clinical">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>${escapeHtml(content.subject)}</title>
+  <style>@media only screen and (max-width:620px){.doctor-shell{padding:14px!important}.doctor-card{border-radius:14px!important}.doctor-header,.doctor-body{padding:24px!important}.doctor-title{font-size:27px!important}}</style>
+</head>
+<body style="margin:0;padding:0;background:#eef2f7;color:#14213d;font-family:Arial,'Helvetica Neue',sans-serif;">
+  <div style="display:none;max-height:0;overflow:hidden;opacity:0;color:transparent;">${escapeHtml(content.preheader)}</div>
+  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#eef2f7;">
+    <tr><td class="doctor-shell" align="center" style="padding:34px 18px;">
+      <table role="presentation" class="doctor-card" width="100%" cellpadding="0" cellspacing="0" style="max-width:620px;border:1px solid #d7dee8;border-radius:18px;border-collapse:separate;overflow:hidden;background:#ffffff;box-shadow:0 14px 36px rgba(15,23,42,.10);">
+        <tr><td class="doctor-header" style="padding:27px 32px;background:#111c35;border-bottom:4px solid #2563eb;">
+          <table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr>
+            <td><span style="color:#ffffff;font-size:20px;font-weight:800;letter-spacing:-.2px;">CareSync</span><span style="margin-left:9px;padding:5px 8px;border-radius:6px;background:#243454;color:#bfdbfe;font-size:10px;font-weight:800;letter-spacing:1px;text-transform:uppercase;">Clinical</span></td>
+            <td align="right" style="color:#93a4bd;font-size:12px;">Doctor workspace</td>
+          </tr></table>
+          <div style="margin-top:27px;color:#93c5fd;font-size:11px;font-weight:800;letter-spacing:1.4px;text-transform:uppercase;">${escapeHtml(content.eyebrow)}</div>
+          <h1 class="doctor-title" style="margin:8px 0 0;color:#ffffff;font-size:32px;line-height:1.16;letter-spacing:-.7px;">${escapeHtml(content.title)}</h1>
+        </td></tr>
+        <tr><td class="doctor-body" style="padding:30px 32px;">
+          <table role="presentation" width="100%" cellpadding="0" cellspacing="0"><tr>
+            <td><span style="display:inline-block;padding:6px 10px;border-radius:7px;background:${tone.soft};color:${tone.text};font-size:11px;font-weight:800;letter-spacing:.5px;text-transform:uppercase;">${escapeHtml(content.badge || "Clinical update")}</span></td>
+            <td align="right" style="color:#64748b;font-size:12px;">Secure appointment notification</td>
+          </tr></table>
+          <p style="margin:22px 0 12px;color:#14213d;font-size:17px;font-weight:800;">${escapeHtml(content.greeting)}</p>
+          ${content.paragraphs.map((paragraph) => `<p style="margin:0 0 12px;color:#526277;font-size:15px;line-height:1.65;">${escapeHtml(paragraph)}</p>`).join("")}
+          ${details}
+          ${notice}
+          ${cta}
+          <p style="margin:15px 0 0;color:#7b8798;font-size:12px;line-height:1.55;">Patient symptoms and clinical details stay inside the secure CareSync doctor portal and are not exposed in email.</p>
+        </td></tr>
+        <tr><td style="padding:19px 32px;border-top:1px solid #e5eaf0;background:#f8fafc;color:#778397;font-size:12px;line-height:1.55;">
+          <strong style="color:#334155;">CareSync Clinical Operations</strong><br>
+          Automated schedule notification. For urgent patient concerns, follow your clinic's escalation protocol.
+        </td></tr>
+      </table>
+      <p style="margin:17px 0 0;color:#8290a3;font-size:11px;">CareSync · Secure clinical appointment management</p>
+    </td></tr>
+  </table>
+</body>
+</html>`;
+}
+
 function renderText(content: EmailContent) {
   const lines = [
     "CARESYNC",
@@ -358,5 +425,6 @@ function renderText(content: EmailContent) {
 
 export function renderNotificationEmail(type: string, subject: string, payload: NotificationEmailPayload) {
   const content = contentFor(type, subject, payload);
-  return { subject: content.subject, html: renderHtml(content), text: renderText(content) };
+  const html = payload.recipientRole === "DOCTOR" ? renderDoctorHtml(content) : renderHtml(content);
+  return { subject: content.subject, html, text: renderText(content) };
 }
