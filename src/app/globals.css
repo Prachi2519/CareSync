@@ -171,9 +171,11 @@ h3 { color: var(--text-strong); font-size: 20px; line-height: 1.25; }
 .sidebar { position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; padding: 24px 18px 18px; border-right: 1px solid var(--border); background: white; }
 .sidebar-brand { padding: 0 10px 24px; }
 .sidebar-nav { display: grid; gap: 6px; }
-.sidebar-link { min-height: 46px; display: flex; align-items: center; gap: 13px; padding: 10px 13px; border-radius: 11px; color: var(--muted); font-weight: 700; transition: background .18s ease, color .18s ease; }
-.sidebar-link:hover { color: var(--primary-dark); background: var(--background); }
-.sidebar-link.active { color: var(--primary-dark); background: var(--primary-soft); }
+.sidebar-link { position: relative; min-height: 46px; display: flex; align-items: center; gap: 13px; padding: 10px 13px; border: 1px solid transparent; border-radius: 11px; color: var(--muted); font-weight: 700; transition: transform .16s ease, border-color .16s ease, background .16s ease, color .16s ease; }
+.sidebar-link:hover { color: var(--primary-dark); border-color: var(--border); background: var(--background); transform: translateX(2px); }
+.sidebar-link:active { transform: translateX(1px) scale(.99); }
+.sidebar-link.active { color: var(--primary-dark); border-color: #b9e6ee; background: var(--primary-soft); box-shadow: inset 3px 0 0 var(--primary); }
+.sidebar-link.active svg { color: var(--primary); }
 .sidebar-user { margin-top: auto; padding: 14px 8px 4px; display: flex; align-items: center; gap: 10px; border-top: 1px solid var(--border); }
 .avatar { width: 40px; height: 40px; display: grid; place-items: center; flex: none; border-radius: 50%; color: white; background: var(--primary); font-weight: 700; }
 .sidebar-user-copy { min-width: 0; display: grid; flex: 1; line-height: 1.25; }
@@ -410,6 +412,9 @@ h3 { color: var(--text-strong); font-size: 20px; line-height: 1.25; }
 .admin-count { min-width: 34px; min-height: 34px; display: inline-grid; place-items: center; padding: 4px 10px; border-radius: 999px; color: var(--primary-dark); background: var(--primary-soft); font-size: 14px; font-weight: 700; font-variant-numeric: tabular-nums; }
 .admin-search { margin: 0 22px 16px; }
 .admin-doctor-list { display: grid; gap: 8px; padding: 0 12px 16px; }
+.admin-directory-panel .admin-doctor-list { max-height: calc(100vh - 330px); min-height: 280px; overflow-y: auto; overscroll-behavior: contain; scrollbar-width: thin; scrollbar-color: #9bcbd4 transparent; }
+.admin-directory-panel .admin-doctor-list::-webkit-scrollbar { width: 8px; }
+.admin-directory-panel .admin-doctor-list::-webkit-scrollbar-thumb { border: 2px solid transparent; border-radius: 999px; background: #9bcbd4; background-clip: padding-box; }
 .admin-doctor-list .skeleton { margin: 0 10px; }
 .admin-doctor-select { width: 100%; min-height: 82px; display: grid; grid-template-columns: auto minmax(0, 1fr) auto; align-items: center; gap: 12px; padding: 12px; border: 1px solid transparent; border-radius: 13px; color: var(--text); background: transparent; text-align: left; transition: background .18s ease, border-color .18s ease, box-shadow .18s ease; }
 .admin-doctor-select:hover { background: var(--background); border-color: var(--border); }
@@ -459,6 +464,8 @@ h3 { color: var(--text-strong); font-size: 20px; line-height: 1.25; }
 .admin-helper svg { flex: none; margin-top: 2px; color: var(--primary-dark); }
 .admin-schedule-list { display: grid; gap: 9px; }
 .admin-schedule-card { display: grid; grid-template-columns: 58px minmax(150px, 1fr) minmax(100px, auto) auto; align-items: center; gap: 13px; min-width: 0; padding: 12px; border: 1px solid var(--border); border-radius: 12px; background: var(--background); }
+.admin-schedule-card { transition: border-color .16s ease, box-shadow .16s ease, background .16s ease; }
+.admin-schedule-card:hover { border-color: #9bcfd8; background: #fff; box-shadow: var(--shadow-sm); }
 .admin-schedule-date { padding: 7px 5px; border-radius: 10px; color: var(--primary-dark); background: var(--primary-soft); text-align: center; line-height: 1.05; }
 .admin-schedule-date span, .admin-schedule-date strong, .admin-schedule-date small { display: block; }
 .admin-schedule-date span { font-size: 11px; text-transform: uppercase; }
@@ -662,6 +669,12 @@ h3 { color: var(--text-strong); font-size: 20px; line-height: 1.25; }
   .admin-working-hours-editor .working-day { grid-template-columns: 92px 1fr 1fr; }
   .notification-title-row, .notification-recovery { align-items: flex-start; flex-direction: column; }
   .notification-recovery .button { width: 100%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { scroll-behavior: auto !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+  .button:hover:not(:disabled), .doctor-card:hover, .sidebar-link:hover { transform: none; }
 }
 
 @media (max-width: 420px) {
