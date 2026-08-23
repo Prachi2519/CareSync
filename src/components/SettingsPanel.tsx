@@ -10,7 +10,6 @@ import {
   Link2Off,
   Mail,
   RefreshCcw,
-  Send,
   ShieldCheck,
 } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
@@ -90,8 +89,8 @@ export function SettingsPanel({ user }: { user: { name: string; email: string; p
     await load();
   }
 
-  async function notificationAction(action: "test" | "retry", jobId?: string) {
-    const key = action === "test" ? "test-email" : `retry-${jobId}`;
+  async function notificationAction(action: "retry", jobId?: string) {
+    const key = `retry-${jobId}`;
     setBusyAction(key);
     setError("");
     setMessage("");
@@ -165,33 +164,6 @@ export function SettingsPanel({ user }: { user: { name: string; email: string; p
           ) : calendar !== null ? (
             <div className="notice">Calendar OAuth is not configured on this server. Add the Google environment variables described in the README.</div>
           ) : null}
-        </section>
-
-        <section className="panel span-12 integration-card">
-          <div className="panel-header">
-            <div><h2>Email delivery</h2><p>Confirm that important updates can reach your inbox</p></div>
-            <Mail size={22} aria-hidden="true" />
-          </div>
-          <div className="integration-layout">
-            <div>
-              <div className={`integration-status ${notifications?.emailConfigured ? "connected" : ""}`}>
-                <span className="integration-status-dot" aria-hidden="true" />
-                <div>
-                  <strong>{notifications === null ? "Checking email service…" : notifications.emailConfigured ? "Email delivery connected" : "Email delivery not configured"}</strong>
-                  <span>{notifications?.emailConfigured ? `Messages are sent by ${notifications.emailFrom}.` : "Add SMTP credentials before sending live notifications."}</span>
-                </div>
-              </div>
-              <p className="integration-helper">Test delivery sends a branded CareSync message to <strong>{user.email}</strong>. No medical information is included.</p>
-            </div>
-            <button
-              className="button button-secondary"
-              disabled={!notifications?.emailConfigured || busyAction === "test-email"}
-              onClick={() => notificationAction("test")}
-            >
-              <Send size={17} aria-hidden="true" />
-              {busyAction === "test-email" ? "Sending test…" : "Send test email"}
-            </button>
-          </div>
         </section>
 
         <section className="panel span-12">
