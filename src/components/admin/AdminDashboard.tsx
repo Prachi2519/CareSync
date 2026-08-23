@@ -481,19 +481,24 @@ function HoursEditor({ prefix, workingHours }: { prefix: string; workingHours?: 
 }
 
 function AddDoctorForm({ saving, onSubmit, onCancel }: { saving: boolean; onSubmit: (event: FormEvent<HTMLFormElement>) => void; onCancel: () => void }) {
+  useEffect(() => {
+    function closeOnEscape(event: KeyboardEvent) { if (event.key === "Escape" && !saving) onCancel(); }
+    document.addEventListener("keydown", closeOnEscape);
+    document.body.classList.add("modal-open");
+    return () => { document.removeEventListener("keydown", closeOnEscape); document.body.classList.remove("modal-open"); };
+  }, [onCancel, saving]);
   return (
-    <section className="panel admin-add-doctor" id="add-doctor" aria-labelledby="add-doctor-title">
-      <div className="panel-header"><div><p className="eyebrow">New portal account</p><h2 id="add-doctor-title">Add doctor</h2><p>Create a profile, secure login, and weekly appointment schedule.</p></div><button type="button" className="button button-ghost" onClick={onCancel}><X size={17} aria-hidden="true" /> Close</button></div>
+    <div className="admin-modal-backdrop" onMouseDown={(event) => { if (event.target === event.currentTarget && !saving) onCancel(); }}>
+    <section className="panel admin-add-doctor" id="add-doctor" role="dialog" aria-modal="true" aria-labelledby="add-doctor-title">
+      <div className="panel-header admin-modal-header"><div><p className="eyebrow">New portal account</p><h2 id="add-doctor-title">Add doctor</h2><p>Create the login, profile, and availability in one guided form.</p></div><button type="button" className="icon-button" aria-label="Close add doctor form" onClick={onCancel} disabled={saving}><X size={20} aria-hidden="true" /></button></div>
       <form className="form-stack" onSubmit={onSubmit}>
-        <div className="field-row"><div className="field"><label htmlFor="doctor-name">Full name</label><input id="doctor-name" name="name" required placeholder="Ananya Mehta" /></div><div className="field"><label htmlFor="doctor-email">Email</label><input id="doctor-email" name="email" type="email" autoComplete="email" required placeholder="doctor@clinic.com" /></div></div>
-        <div className="field-row"><div className="field"><label htmlFor="doctor-password">Temporary password</label><input id="doctor-password" name="password" type="password" autoComplete="new-password" minLength={8} required defaultValue="Doctor@123" /></div><div className="field"><label htmlFor="specialization">Specialty</label><input id="specialization" name="specialization" required placeholder="General Medicine" /></div></div>
-        <div className="field-row"><div className="field"><label htmlFor="qualifications">Qualifications</label><input id="qualifications" name="qualifications" required placeholder="MBBS, MD" /></div><div className="field"><label htmlFor="experience">Years of experience</label><input id="experience" name="yearsExperience" type="number" min="0" max="70" defaultValue="5" required /></div></div>
-        <div className="field"><label htmlFor="bio">Profile summary</label><textarea id="bio" name="bio" required minLength={10} placeholder="Clinical interests and approach to patient care..." /></div>
-        <div className="field"><label htmlFor="duration">Slot duration</label><select id="duration" name="slotDurationMinutes" defaultValue="30">{[15, 20, 30, 45, 60].map((minutes) => <option key={minutes} value={minutes}>{minutes} minutes</option>)}</select></div>
-        <HoursEditor prefix="add" />
-        <div className="admin-form-actions"><button type="button" className="button button-ghost" onClick={onCancel}>Cancel</button><button className="button button-primary" disabled={saving}>{saving ? <><LoaderCircle size={18} aria-hidden="true" /> Creating...</> : <><UserRoundCheck size={18} aria-hidden="true" /> Create doctor profile</>}</button></div>
+        <div className="admin-form-section"><div><strong>Account</strong><span>Used by the doctor to sign in and receive clinic updates.</span></div><div className="field-row"><div className="field"><label htmlFor="doctor-name">Full name</label><input id="doctor-name" name="name" required minLength={2} maxLength={80} autoFocus placeholder="Ananya Mehta" /></div><div className="field"><label htmlFor="doctor-email">Work email</label><input id="doctor-email" name="email" type="email" autoComplete="email" required placeholder="doctor@clinic.com" /></div></div><div className="field"><label htmlFor="doctor-password">Temporary password</label><input id="doctor-password" name="password" type="password" autoComplete="new-password" minLength={8} maxLength={128} required placeholder="At least 8 characters" /><small>Share this securely. The doctor can use it for their first sign-in.</small></div></div>
+        <div className="admin-form-section"><div><strong>Professional profile</strong><span>Shown to patients while choosing a doctor.</span></div><div className="field-row"><div className="field"><label htmlFor="specialization">Specialty</label><input id="specialization" name="specialization" required minLength={2} maxLength={100} placeholder="General Medicine" /></div><div className="field"><label htmlFor="qualifications">Qualifications</label><input id="qualifications" name="qualifications" required minLength={2} maxLength={160} placeholder="MBBS, MD" /></div></div><div className="field-row"><div className="field"><label htmlFor="experience">Years of experience</label><input id="experience" name="yearsExperience" type="number" min="0" max="70" defaultValue="5" required /></div><div className="field"><label htmlFor="duration">Slot duration</label><select id="duration" name="slotDurationMinutes" defaultValue="30">{[15, 20, 30, 45, 60].map((minutes) => <option key={minutes} value={minutes}>{minutes} minutes</option>)}</select></div></div><div className="field"><label htmlFor="bio">Profile summary</label><textarea id="bio" name="bio" required minLength={10} maxLength={1000} placeholder="Clinical interests and approach to patient care..." /><small>10–1,000 characters. Keep it clear and patient-friendly.</small></div></div>
+        <div className="admin-form-section"><div><strong>Weekly availability</strong><span>Patients only see bookable times inside these hours.</span></div><HoursEditor prefix="add" /></div>
+        <div className="admin-form-actions admin-modal-actions"><button type="button" className="button button-ghost" onClick={onCancel} disabled={saving}>Cancel</button><button className="button button-primary" disabled={saving}>{saving ? <><LoaderCircle size={18} aria-hidden="true" /> Creating...</> : <><UserRoundCheck size={18} aria-hidden="true" /> Create doctor profile</>}</button></div>
       </form>
     </section>
+    </div>
   );
 }
 
