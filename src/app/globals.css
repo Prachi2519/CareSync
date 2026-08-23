@@ -70,8 +70,8 @@ button:disabled { cursor: not-allowed; opacity: .62; }
 .icon-button { width: 44px; height: 44px; display: grid; place-items: center; flex: none; border: 0; border-radius: 12px; color: var(--muted); background: transparent; }
 .icon-button:hover { color: var(--primary-dark); background: var(--surface-alt); }
 
-.hero { position: relative; overflow: hidden; padding: 82px 0 72px; }
-.hero::before { content: ""; position: absolute; width: 620px; height: 620px; right: -280px; top: -260px; border-radius: 50%; background: radial-gradient(circle, rgba(34, 211, 238, .16), transparent 68%); pointer-events: none; }
+.hero { position: relative; overflow: hidden; padding: 92px 0 84px; background: linear-gradient(135deg, #f6f9f9 0%, #f2f9f9 55%, #e8f7f8 100%); }
+.hero::before { content: ""; position: absolute; inset: 0; opacity: .34; background-image: linear-gradient(rgba(8,125,145,.07) 1px, transparent 1px), linear-gradient(90deg, rgba(8,125,145,.07) 1px, transparent 1px); background-size: 56px 56px; mask-image: linear-gradient(to right, transparent 28%, black); pointer-events: none; }
 .hero-grid { display: grid; grid-template-columns: 1.05fr .95fr; align-items: center; gap: 72px; }
 .eyebrow { display: inline-flex; align-items: center; gap: 8px; margin: 0 0 18px; color: var(--primary-dark); font-size: 14px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; }
 .eyebrow-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 0 5px rgba(4, 120, 87, .1); }
@@ -85,7 +85,7 @@ h3 { color: var(--text-strong); font-size: 20px; line-height: 1.25; }
 .trust-row { display: flex; flex-wrap: wrap; gap: 18px; color: var(--muted); font-size: 14px; }
 .trust-row span { display: inline-flex; align-items: center; gap: 7px; }
 .trust-row svg { color: var(--accent); }
-.hero-panel { position: relative; padding: 26px; border: 1px solid rgba(202, 227, 232, .9); border-radius: 28px; background: rgba(255, 255, 255, .86); box-shadow: var(--shadow-md); }
+.hero-panel { position: relative; padding: 28px; border: 1px solid rgba(220, 231, 232, .94); border-radius: 20px; background: rgba(255, 255, 255, .92); box-shadow: var(--shadow-md); animation: product-enter .65s cubic-bezier(.22,1,.36,1) both; }
 .hero-panel-top { display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 22px; }
 .hero-panel-top h3 { margin-bottom: 3px; }
 .hero-panel-top p { margin: 0; color: var(--muted); font-size: 14px; }
@@ -107,8 +107,12 @@ h3 { color: var(--text-strong); font-size: 20px; line-height: 1.25; }
 .section-heading { max-width: 670px; margin-bottom: 42px; }
 .section-heading.center { margin-inline: auto; text-align: center; }
 .section-heading p { color: var(--muted); font-size: 18px; }
-.feature-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
-.feature-card { padding: 26px; border: 1px solid var(--border); border-radius: var(--radius-lg); background: white; box-shadow: var(--shadow-sm); }
+.outcome-list { border-top: 1px solid var(--border); }
+.outcome-row { display: grid; grid-template-columns: 48px 28px minmax(190px, .7fr) minmax(280px, 1.3fr); align-items: center; gap: 20px; padding: 25px 4px; border-bottom: 1px solid var(--border); }
+.outcome-row > svg { color: var(--primary); }
+.outcome-row h3, .outcome-row p { margin: 0; }
+.outcome-row p { color: var(--muted); }
+.outcome-number { color: #8da2a7; font-size: 12px; font-weight: 800; letter-spacing: .08em; font-variant-numeric: tabular-nums; }
 .feature-icon { width: 48px; height: 48px; display: grid; place-items: center; margin-bottom: 22px; border-radius: 14px; color: var(--primary-dark); background: var(--primary-soft); }
 .feature-card:nth-child(2) .feature-icon { color: var(--accent-dark); background: var(--accent-soft); }
 .feature-card p { margin: 0; color: var(--muted); }
@@ -117,13 +121,18 @@ h3 { color: var(--text-strong); font-size: 20px; line-height: 1.25; }
 .step::before { content: counter(steps); width: 42px; height: 42px; display: grid; place-items: center; margin-bottom: 18px; border-radius: 50%; color: white; background: var(--primary); font-weight: 700; }
 .step:not(:last-child)::after { content: ""; position: absolute; top: 21px; left: 54px; right: -16px; height: 1px; background: var(--border); }
 .step p { color: var(--muted); }
-.role-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
-.role-card { padding: 30px; border-radius: var(--radius-lg); background: var(--surface-alt); }
+.role-grid { display: grid; grid-template-columns: repeat(3, 1fr); overflow: hidden; border: 1px solid var(--border); border-radius: var(--radius-lg); background: white; }
+.role-card { padding: 32px; background: white; }
+.role-card + .role-card { border-left: 1px solid var(--border); }
+.role-label { display: inline-flex; align-items: center; gap: 8px; margin-bottom: 24px; color: var(--primary-dark); font-size: 13px; font-weight: 800; text-transform: uppercase; letter-spacing: .06em; }
+.role-card h3 { min-height: 50px; }
 .role-card ul { margin: 20px 0 0; padding: 0; list-style: none; }
 .role-card li { position: relative; margin: 10px 0; padding-left: 23px; color: var(--muted); }
 .role-card li::before { content: ""; position: absolute; left: 0; top: .55em; width: 8px; height: 8px; border-radius: 50%; background: var(--accent); }
 .cta-panel { padding: 52px; display: flex; align-items: center; justify-content: space-between; gap: 40px; border-radius: 30px; color: white; background: var(--text-strong); overflow: hidden; position: relative; }
-.cta-panel::after { content: ""; position: absolute; width: 260px; height: 260px; right: -90px; bottom: -160px; border-radius: 50%; border: 42px solid rgba(34,211,238,.16); }
+.cta-panel::after { content: ""; position: absolute; inset: 0; background: linear-gradient(105deg, transparent 45%, rgba(42, 196, 190, .14)); pointer-events: none; }
+
+@keyframes product-enter { from { opacity: 0; transform: translateY(16px) scale(.985); } to { opacity: 1; transform: translateY(0) scale(1); } }
 .cta-panel h2 { margin-bottom: 10px; color: white; }
 .cta-panel p { margin: 0; color: #c8e2e8; }
 .cta-panel .button { position: relative; z-index: 1; flex: none; }

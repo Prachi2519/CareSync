@@ -66,19 +66,22 @@ export default function HomePage() {
               <h2>Less coordination. More time for care.</h2>
               <p>CareSync connects preparation, appointments, and follow-up without making the experience feel clinical or complicated.</p>
             </div>
-            <div className="feature-grid">
-              <article className="feature-card">
-                <span className="feature-icon"><CalendarClock size={24} /></span>
+            <div className="outcome-list">
+              <article className="outcome-row">
+                <span className="outcome-number">01</span>
+                <CalendarClock size={22} aria-hidden="true" />
                 <h3>Book with confidence</h3>
                 <p>See real availability, reserve a slot safely, and receive confirmation without double-booking surprises.</p>
               </article>
-              <article className="feature-card">
-                <span className="feature-icon"><BrainCircuit size={24} /></span>
+              <article className="outcome-row">
+                <span className="outcome-number">02</span>
+                <BrainCircuit size={22} aria-hidden="true" />
                 <h3>Arrive prepared</h3>
                 <p>A concise, non-diagnostic symptom summary helps the doctor understand the concern before the visit begins.</p>
               </article>
-              <article className="feature-card">
-                <span className="feature-icon"><ClipboardCheck size={24} /></span>
+              <article className="outcome-row">
+                <span className="outcome-number">03</span>
+                <ClipboardCheck size={22} aria-hidden="true" />
                 <h3>Know what comes next</h3>
                 <p>Patient-friendly visit notes, medication schedules, and follow-up reminders keep care plans understandable.</p>
               </article>
@@ -102,9 +105,9 @@ export default function HomePage() {
           <div className="container">
             <div className="section-heading center"><p className="eyebrow">Built for the whole clinic</p><h2>One platform, three focused portals.</h2></div>
             <div className="role-grid">
-              <article className="role-card"><span className="feature-icon"><UserRoundCheck size={24} /></span><h3>For patients</h3><ul><li>Doctor discovery and live slots</li><li>Visit and medication summaries</li><li>Email and calendar updates</li></ul></article>
-              <article className="role-card"><span className="feature-icon"><Stethoscope size={24} /></span><h3>For doctors</h3><ul><li>Urgency-aware visit preparation</li><li>Structured clinical notes</li><li>Fast, clear follow-up plans</li></ul></article>
-              <article className="role-card"><span className="feature-icon"><LockKeyhole size={24} /></span><h3>For administrators</h3><ul><li>Doctor schedules and profiles</li><li>Leave conflict handling</li><li>Reliable notification delivery</li></ul></article>
+              <article className="role-card"><span className="role-label"><UserRoundCheck size={20} />Patient</span><h3>Care without the coordination burden.</h3><ul><li>Doctor discovery and live slots</li><li>Visit and medication summaries</li><li>Email and calendar updates</li></ul></article>
+              <article className="role-card"><span className="role-label"><Stethoscope size={20} />Doctor</span><h3>Context before the consultation starts.</h3><ul><li>Urgency-aware visit preparation</li><li>Structured clinical notes</li><li>Fast, clear follow-up plans</li></ul></article>
+              <article className="role-card"><span className="role-label"><LockKeyhole size={20} />Administrator</span><h3>One operational view of the clinic.</h3><ul><li>Doctor schedules and profiles</li><li>Leave conflict handling</li><li>Reliable notification delivery</li></ul></article>
             </div>
           </div>
         </section>
