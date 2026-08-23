@@ -58,6 +58,12 @@ export function PortalShell({ user, children }: { user: ShellUser; children: Rea
     return !hash;
   }
 
+  function handlePortalNavigation(href: string) {
+    const itemHash = href.includes("#") ? `#${href.split("#")[1]}` : "";
+    setHash(itemHash);
+    window.dispatchEvent(new CustomEvent("caresync:navigate", { detail: { hash: itemHash } }));
+  }
+
   async function logout() {
     setLoggingOut(true);
     await fetch("/api/auth/logout", { method: "POST" });
@@ -74,7 +80,7 @@ export function PortalShell({ user, children }: { user: ShellUser; children: Rea
             const Icon = item.icon;
             const active = isActive(item.href);
             return (
-              <Link key={item.label} href={item.href} className={`sidebar-link ${active ? "active" : ""}`}>
+              <Link key={item.label} href={item.href} onClick={() => handlePortalNavigation(item.href)} className={`sidebar-link ${active ? "active" : ""}`}>
                 <Icon size={20} aria-hidden="true" />
                 <span>{item.label}</span>
               </Link>
@@ -105,7 +111,7 @@ export function PortalShell({ user, children }: { user: ShellUser; children: Rea
             const Icon = item.icon;
             const active = isActive(item.href);
             return (
-              <Link key={item.label} href={item.href} className={active ? "active" : ""}>
+              <Link key={item.label} href={item.href} onClick={() => handlePortalNavigation(item.href)} className={active ? "active" : ""}>
                 <Icon size={20} aria-hidden="true" /><span>{item.label}</span>
               </Link>
             );

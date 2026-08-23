@@ -137,9 +137,17 @@ export function AdminDashboard() {
 
   useEffect(() => {
     const syncAdminRoute = () => setShowAddDoctor(window.location.hash === "#add-doctor");
+    const syncPortalNavigation = (event: Event) => {
+      const navigationEvent = event as CustomEvent<{ hash: string }>;
+      setShowAddDoctor(navigationEvent.detail.hash === "#add-doctor");
+    };
     syncAdminRoute();
     window.addEventListener("hashchange", syncAdminRoute);
-    return () => window.removeEventListener("hashchange", syncAdminRoute);
+    window.addEventListener("caresync:navigate", syncPortalNavigation);
+    return () => {
+      window.removeEventListener("hashchange", syncAdminRoute);
+      window.removeEventListener("caresync:navigate", syncPortalNavigation);
+    };
   }, []);
 
   function closeAddDoctor() {
