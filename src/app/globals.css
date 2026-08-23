@@ -527,7 +527,7 @@ h3 { color: var(--text-strong); font-size: 20px; line-height: 1.25; }
 .admin-schedule-status { display: flex; justify-content: flex-end; gap: 6px; flex-wrap: wrap; }
 .admin-cancellation-note { grid-column: 2 / -1; margin: -4px 0 0; padding-top: 8px; border-top: 1px solid var(--border); color: var(--danger); font-size: 12px; }
 .admin-schedule-card.expanded { border-color: #99d6e0; background: #fff; box-shadow: 0 12px 30px rgba(25, 85, 96, .08); }
-.admin-appointment-expand { grid-column: 2 / -1; min-height: 42px; display: flex; align-items: center; justify-content: center; gap: 7px; margin-top: -2px; border: 0; border-top: 1px solid var(--border); color: var(--primary-dark); background: transparent; font-weight: 750; cursor: pointer; }
+.admin-appointment-expand { grid-column: 2 / -1; min-height: 44px; display: flex; align-items: center; justify-content: center; gap: 7px; margin-top: -2px; border: 0; border-top: 1px solid var(--border); color: var(--primary-dark); background: transparent; font-weight: 750; cursor: pointer; }
 .admin-appointment-expand:hover { color: var(--primary); background: var(--primary-soft); }
 .admin-appointment-expand:focus-visible { outline: 3px solid rgba(16, 128, 145, .24); outline-offset: 2px; }
 .admin-appointment-expand svg { transition: transform .18s ease; }
@@ -566,7 +566,7 @@ h3 { color: var(--text-strong); font-size: 20px; line-height: 1.25; }
 .admin-schedule-toolbar { display: flex; align-items: center; gap: 12px; margin-bottom: 16px; }
 .admin-schedule-toolbar .search-input { max-width: 430px; }
 .admin-filter-group { display: flex; flex-wrap: wrap; gap: 6px; }
-.admin-filter-group button { min-height: 40px; padding: 7px 13px; border: 1px solid var(--border); border-radius: 999px; color: var(--muted); background: white; font-weight: 700; text-transform: capitalize; transition: color .18s ease, background .18s ease, border-color .18s ease; }
+.admin-filter-group button { min-height: 44px; padding: 8px 14px; border: 1px solid var(--border); border-radius: 999px; color: var(--muted); background: white; font-weight: 700; text-transform: capitalize; transition: color .18s ease, background .18s ease, border-color .18s ease; }
 .admin-filter-group button:hover { color: var(--primary-dark); border-color: #99d6e0; }
 .admin-filter-group button.active { color: var(--primary-dark); border-color: #99d6e0; background: var(--primary-soft); }
 .admin-edit-form { margin: 20px 0; padding: 20px; border: 1px solid #9bd6df; border-radius: 14px; background: var(--background); }
@@ -728,6 +728,9 @@ h3 { color: var(--text-strong); font-size: 20px; line-height: 1.25; }
   .admin-leave-form .button { grid-column: 1 / -1; justify-self: stretch; }
   .admin-schedule-toolbar { align-items: stretch; flex-direction: column; }
   .admin-schedule-toolbar .search-input { max-width: none; }
+  .admin-filter-group { flex-wrap: nowrap; overflow-x: auto; padding: 2px 1px 6px; scrollbar-width: none; }
+  .admin-filter-group::-webkit-scrollbar { display: none; }
+  .admin-filter-group button { flex: 0 0 auto; }
   .admin-schedule-card { grid-template-columns: 54px minmax(0, 1fr) auto; }
   .admin-schedule-time { text-align: right; }
   .admin-schedule-status { grid-column: 2 / -1; justify-content: flex-start; }
@@ -785,6 +788,8 @@ h3 { color: var(--text-strong); font-size: 20px; line-height: 1.25; }
   .admin-leave-row > span { grid-column: 1 / -1; grid-row: 2; }
   .admin-remove-leave { grid-column: 2; grid-row: 1; }
   .admin-schedule-card { grid-template-columns: 52px minmax(0, 1fr); }
+  .admin-schedule-card { gap: 11px; padding: 14px; }
+  .admin-schedule-main span, .admin-schedule-main small, .admin-schedule-time span { font-size: 13px; line-height: 1.45; }
   .admin-schedule-time { grid-column: 2; text-align: left; }
   .admin-schedule-status { grid-column: 1 / -1; }
   .admin-cancellation-note { grid-column: 1 / -1; }
