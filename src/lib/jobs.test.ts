@@ -28,6 +28,7 @@ describe("lifecycle notification delivery", () => {
       patient: { id: "patient-1", name: "Riya Sharma", email: "patient@example.com" },
       doctor: {
         specialization: "General Medicine",
+        notificationEmail: "clinic-doctors@example.com",
         user: { id: "doctor-1", name: "Ananya Mehta", email: "doctor@example.com" },
       },
     }, "BOOKING");
@@ -39,7 +40,10 @@ describe("lifecycle notification delivery", () => {
     expect(patientEmail.subject).toBe("Appointment confirmed with Dr. Ananya Mehta");
     expect(JSON.parse(patientEmail.payload).recipientRole).toBe("PATIENT");
     expect(doctorEmail.subject).toBe("New appointment: Riya Sharma");
+    expect(doctorEmail.recipient).toBe("clinic-doctors@example.com");
     expect(JSON.parse(doctorEmail.payload).recipientRole).toBe("DOCTOR");
+    const doctorCalendar = jobs.find((job: { channel: string; userId: string }) => job.channel === "CALENDAR" && job.userId === "doctor-1");
+    expect(doctorCalendar.recipient).toBe("doctor@example.com");
     expect(mocks.after).toHaveBeenCalledOnce();
     expect(mocks.processNotificationJobs).toHaveBeenCalledWith(10, "appointment-123");
   });

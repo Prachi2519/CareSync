@@ -50,6 +50,7 @@ export async function POST(request: Request) {
             specialization: input.specialization,
             qualifications: input.qualifications,
             bio: input.bio,
+            notificationEmail: email,
             yearsExperience: input.yearsExperience,
             slotDurationMinutes: input.slotDurationMinutes,
             workingHours: JSON.stringify(input.workingHours),

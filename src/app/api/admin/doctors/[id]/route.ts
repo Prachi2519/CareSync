@@ -17,6 +17,7 @@ export async function PATCH(request: Request, context: { params: Promise<{ id: s
         specialization: input.specialization,
         qualifications: input.qualifications,
         bio: input.bio,
+        notificationEmail: input.email,
         yearsExperience: input.yearsExperience,
         slotDurationMinutes: input.slotDurationMinutes,
         workingHours: input.workingHours ? JSON.stringify(input.workingHours) : undefined,

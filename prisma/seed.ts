@@ -6,6 +6,7 @@ const prisma = new PrismaClient();
 
 async function main() {
   const passwordHash = await bcrypt.hash("Demo@123", 12);
+  const demoDoctorNotificationEmail = "mgupta810722@gmail.com";
   const patient = await prisma.user.upsert({
     where: { id: "demo-patient" },
     update: { email: "patient@caresync.dev", passwordHash },
@@ -23,13 +24,14 @@ async function main() {
   });
   const doctor = await prisma.doctorProfile.upsert({
     where: { userId: doctorUser.id },
-    update: {},
+    update: { notificationEmail: demoDoctorNotificationEmail },
     create: {
       id: "demo-doctor",
       userId: doctorUser.id,
       specialization: "General Medicine",
       qualifications: "MBBS, MD (Internal Medicine)",
       bio: "Patient-focused physician with experience in preventive care, chronic conditions, and everyday health concerns.",
+      notificationEmail: demoDoctorNotificationEmail,
       yearsExperience: 11,
       slotDurationMinutes: 30,
       workingHours: JSON.stringify({ "1": ["09:00", "17:00"], "2": ["09:00", "17:00"], "3": ["09:00", "17:00"], "4": ["09:00", "17:00"], "5": ["09:00", "17:00"], "6": ["10:00", "13:00"] }),
@@ -42,13 +44,14 @@ async function main() {
   });
   await prisma.doctorProfile.upsert({
     where: { userId: secondUser.id },
-    update: {},
+    update: { notificationEmail: demoDoctorNotificationEmail },
     create: {
       id: "demo-cardiologist",
       userId: secondUser.id,
       specialization: "Cardiology",
       qualifications: "MBBS, MD, DM (Cardiology)",
       bio: "Cardiologist focused on evidence-based prevention, heart rhythm concerns, and long-term cardiovascular health.",
+      notificationEmail: demoDoctorNotificationEmail,
       yearsExperience: 15,
       slotDurationMinutes: 30,
       workingHours: JSON.stringify({ "1": ["10:00", "16:00"], "2": ["10:00", "16:00"], "4": ["10:00", "16:00"], "5": ["10:00", "16:00"] }),
@@ -174,6 +177,7 @@ async function main() {
         specialization: item.specialization,
         qualifications: item.qualifications,
         bio: item.bio,
+        notificationEmail: demoDoctorNotificationEmail,
         yearsExperience: item.yearsExperience,
         slotDurationMinutes: item.slotDurationMinutes,
         workingHours: JSON.stringify(item.workingHours),
@@ -184,6 +188,7 @@ async function main() {
         specialization: item.specialization,
         qualifications: item.qualifications,
         bio: item.bio,
+        notificationEmail: demoDoctorNotificationEmail,
         yearsExperience: item.yearsExperience,
         slotDurationMinutes: item.slotDurationMinutes,
         workingHours: JSON.stringify(item.workingHours),

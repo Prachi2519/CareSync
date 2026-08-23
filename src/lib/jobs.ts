@@ -8,7 +8,7 @@ type AppointmentForJobs = {
   endTime: Date;
   cancellationReason?: string | null;
   patient: { id: string; name: string; email: string };
-  doctor: { specialization?: string; user: { id: string; name: string; email: string } };
+  doctor: { specialization?: string; notificationEmail?: string | null; user: { id: string; name: string; email: string } };
 };
 
 type LifecycleAction = "BOOKING" | "RESCHEDULE" | "CANCELLATION";
@@ -30,7 +30,8 @@ export async function queueLifecycleJobs(
       role: "PATIENT" as const,
       userId: appointment.patient.id,
       name: appointment.patient.name,
-      email: appointment.patient.email,
+      emailRecipient: appointment.patient.email,
+      calendarRecipient: appointment.patient.email,
       counterpart: `Dr. ${appointment.doctor.user.name}`,
       appointmentUrl: `/patient/appointments/${appointment.id}`,
       calendarTitle: `Appointment with Dr. ${appointment.doctor.user.name}`,
@@ -39,7 +40,8 @@ export async function queueLifecycleJobs(
       role: "DOCTOR" as const,
       userId: appointment.doctor.user.id,
       name: appointment.doctor.user.name,
-      email: appointment.doctor.user.email,
+      emailRecipient: appointment.doctor.notificationEmail || appointment.doctor.user.email,
+      calendarRecipient: appointment.doctor.user.email,
       counterpart: appointment.patient.name,
       appointmentUrl: `/doctor/appointments/${appointment.id}`,
       calendarTitle: `Appointment with ${appointment.patient.name}`,
@@ -52,7 +54,7 @@ export async function queueLifecycleJobs(
       appointmentId: appointment.id,
       channel: "EMAIL" as const,
       type: action,
-      recipient: person.email,
+      recipient: person.emailRecipient,
       subject:
         person.role === "DOCTOR"
           ? action === "BOOKING"
@@ -79,7 +81,7 @@ export async function queueLifecycleJobs(
       appointmentId: appointment.id,
       channel: "CALENDAR" as const,
       type: `CALENDAR_${calendarAction}`,
-      recipient: person.email,
+      recipient: person.calendarRecipient,
       subject: null,
       payload: JSON.stringify({
         appointmentId: appointment.id,
