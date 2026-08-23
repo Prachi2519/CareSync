@@ -302,6 +302,15 @@ h3 { color: var(--text-strong); font-size: 20px; line-height: 1.25; }
 .summary-row { padding-top: 14px; margin-top: 14px; display: flex; justify-content: space-between; gap: 14px; border-top: 1px solid var(--border); font-size: 14px; }
 .summary-row span { color: var(--muted); }
 .symptom-tips { margin-top: 15px; padding: 15px; border-radius: 12px; color: var(--primary-dark); background: var(--primary-soft); font-size: 14px; }
+.symptom-field { gap: 11px; }
+.symptom-field-copy { display: grid; gap: 5px; }
+.symptom-field-copy label { font-size: 16px; }
+.symptom-field-copy p { max-width: 66ch; margin: 0; color: var(--muted); font-size: 14px; line-height: 1.55; }
+.symptom-field textarea { min-height: 240px; padding: 16px 18px; border-color: #c8dadd; line-height: 1.65; }
+.symptom-field textarea::placeholder { color: #7a8e94; opacity: 1; }
+.symptom-field .field-counter { align-items: center; margin-top: -2px; }
+.symptom-field .field-counter small { font-size: 13px; }
+.symptom-field .field-counter span { color: var(--muted); font-size: 13px; font-weight: 700; }
 .hold-timer { display: inline-flex; align-items: center; gap: 7px; color: var(--warning); font-weight: 700; font-size: 14px; }
 .confirmation { text-align: center; }
 .confirmation-icon { width: 68px; height: 68px; display: grid; place-items: center; margin: 0 auto 18px; border-radius: 50%; color: white; background: var(--accent); }
@@ -686,6 +695,8 @@ h3 { color: var(--text-strong); font-size: 20px; line-height: 1.25; }
   .appointment-item { grid-template-columns: auto 1fr; }
   .appointment-actions { grid-column: 1 / -1; justify-content: flex-end; }
   .booking-card { padding: 20px; }
+  .symptom-field textarea { min-height: 200px; padding: 15px 16px; }
+  .symptom-field .field-counter { align-items: flex-start; }
   .date-strip { grid-template-columns: repeat(5, minmax(58px, 1fr)); overflow-x: auto; padding-bottom: 5px; }
   .slot-grid { grid-template-columns: repeat(3, 1fr); }
   .field-row, .prescription-grid { grid-template-columns: 1fr; }
