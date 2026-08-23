@@ -27,6 +27,7 @@ import {
 import { type FormEvent, useEffect, useMemo, useState } from "react";
 import { StatusBadge } from "@/components/StatusBadge";
 import { enumerateLeaveDates, sortDoctorLeaves } from "@/lib/admin-dashboard";
+import { formatPrescription } from "@/lib/prescription";
 
 type WorkingHours = Record<string, [string, string]>;
 
@@ -538,7 +539,7 @@ function AppointmentList({ appointments, emptyMessage, showDoctor = false }: { a
             <div className="admin-detail-heading"><Pill size={18} aria-hidden="true" /><div><h4>Visit outcome</h4><p>Doctor notes, prescription, and patient summary</p></div></div>
             <div className="admin-outcome-grid">
               {appointment.postVisitNotes && <div><span>Clinical notes</span><p>{appointment.postVisitNotes}</p></div>}
-              {appointment.prescription && <div><span>Prescription</span><p>{appointment.prescription}</p></div>}
+              {appointment.prescription && <div><span>Prescription</span><p>{formatPrescription(appointment.prescription)}</p></div>}
               {postVisit?.summary && <div><span>Patient-friendly summary</span><p>{postVisit.summary}</p></div>}
               {postVisit?.medicationSchedule && <div><span>Medication schedule</span><p>{postVisit.medicationSchedule}</p></div>}
             </div>
