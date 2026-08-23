@@ -62,8 +62,8 @@ Demo accounts (all use password `Demo@123`):
 | Role | Email |
 |---|---|
 | Patient | `patient@caresync.dev` |
-| Doctor | `doctor@caresync.dev` |
-| Admin | `admin@caresync.dev` |
+| Doctor | `prachi639220+doctor@gmail.com` |
+| Admin | `prachi639220@gmail.com` |
 
 The seed is idempotent. It creates two doctors, a future appointment, and a completed appointment with a follow-up summary.
 

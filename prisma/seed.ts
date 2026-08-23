@@ -7,19 +7,19 @@ const prisma = new PrismaClient();
 async function main() {
   const passwordHash = await bcrypt.hash("Demo@123", 12);
   const patient = await prisma.user.upsert({
-    where: { email: "patient@caresync.dev" },
-    update: { passwordHash },
+    where: { id: "demo-patient" },
+    update: { email: "patient@caresync.dev", passwordHash },
     create: { id: "demo-patient", name: "Riya Sharma", email: "patient@caresync.dev", phone: "+91 98765 43210", role: "PATIENT", passwordHash },
   });
   await prisma.user.upsert({
-    where: { email: "admin@caresync.dev" },
-    update: { passwordHash },
-    create: { id: "demo-admin", name: "Clinic Admin", email: "admin@caresync.dev", role: "ADMIN", passwordHash },
+    where: { id: "demo-admin" },
+    update: { email: "prachi639220@gmail.com", passwordHash },
+    create: { id: "demo-admin", name: "Clinic Admin", email: "prachi639220@gmail.com", role: "ADMIN", passwordHash },
   });
   const doctorUser = await prisma.user.upsert({
-    where: { email: "doctor@caresync.dev" },
-    update: { passwordHash },
-    create: { id: "demo-doctor-user", name: "Ananya Mehta", email: "doctor@caresync.dev", phone: "+91 99887 76655", role: "DOCTOR", passwordHash },
+    where: { id: "demo-doctor-user" },
+    update: { email: "prachi639220+doctor@gmail.com", passwordHash },
+    create: { id: "demo-doctor-user", name: "Ananya Mehta", email: "prachi639220+doctor@gmail.com", phone: "+91 99887 76655", role: "DOCTOR", passwordHash },
   });
   const doctor = await prisma.doctorProfile.upsert({
     where: { userId: doctorUser.id },
@@ -36,9 +36,9 @@ async function main() {
     },
   });
   const secondUser = await prisma.user.upsert({
-    where: { email: "cardio@caresync.dev" },
-    update: { passwordHash },
-    create: { id: "demo-cardiologist-user", name: "Arjun Rao", email: "cardio@caresync.dev", role: "DOCTOR", passwordHash },
+    where: { id: "demo-cardiologist-user" },
+    update: { email: "prachi639220+cardiology@gmail.com", passwordHash },
+    create: { id: "demo-cardiologist-user", name: "Arjun Rao", email: "prachi639220+cardiology@gmail.com", role: "DOCTOR", passwordHash },
   });
   await prisma.doctorProfile.upsert({
     where: { userId: secondUser.id },
@@ -60,7 +60,7 @@ async function main() {
       id: "demo-pediatrician",
       userId: "demo-pediatrician-user",
       name: "Kavya Iyer",
-      email: "pediatrics@caresync.dev",
+      email: "prachi639220+pediatrics@gmail.com",
       phone: "+91 98720 11442",
       specialization: "Pediatrics",
       qualifications: "MBBS, MD (Pediatrics)",
@@ -73,7 +73,7 @@ async function main() {
       id: "demo-dermatologist",
       userId: "demo-dermatologist-user",
       name: "Neha Kapoor",
-      email: "dermatology@caresync.dev",
+      email: "prachi639220+dermatology@gmail.com",
       phone: "+91 98110 44332",
       specialization: "Dermatology",
       qualifications: "MBBS, MD (Dermatology, Venereology & Leprosy)",
@@ -86,7 +86,7 @@ async function main() {
       id: "demo-orthopedist",
       userId: "demo-orthopedist-user",
       name: "Vikram Singh",
-      email: "orthopedics@caresync.dev",
+      email: "prachi639220+orthopedics@gmail.com",
       phone: "+91 98991 22556",
       specialization: "Orthopedics",
       qualifications: "MBBS, MS (Orthopaedics)",
@@ -99,7 +99,7 @@ async function main() {
       id: "demo-gynecologist",
       userId: "demo-gynecologist-user",
       name: "Sanya Malhotra",
-      email: "gynecology@caresync.dev",
+      email: "prachi639220+gynecology@gmail.com",
       phone: "+91 98202 77118",
       specialization: "Gynecology",
       qualifications: "MBBS, MS (Obstetrics & Gynaecology)",
@@ -112,7 +112,7 @@ async function main() {
       id: "demo-neurologist",
       userId: "demo-neurologist-user",
       name: "Rohan Banerjee",
-      email: "neurology@caresync.dev",
+      email: "prachi639220+neurology@gmail.com",
       phone: "+91 98300 66129",
       specialization: "Neurology",
       qualifications: "MBBS, MD, DM (Neurology)",
@@ -125,7 +125,7 @@ async function main() {
       id: "demo-ent",
       userId: "demo-ent-user",
       name: "Aditi Joshi",
-      email: "ent@caresync.dev",
+      email: "prachi639220+ent@gmail.com",
       phone: "+91 97660 33551",
       specialization: "ENT",
       qualifications: "MBBS, MS (ENT)",
@@ -138,7 +138,7 @@ async function main() {
       id: "demo-psychiatrist",
       userId: "demo-psychiatrist-user",
       name: "Meera Nair",
-      email: "psychiatry@caresync.dev",
+      email: "prachi639220+psychiatry@gmail.com",
       phone: "+91 98470 44882",
       specialization: "Psychiatry",
       qualifications: "MBBS, MD (Psychiatry)",
@@ -151,7 +151,7 @@ async function main() {
       id: "demo-endocrinologist",
       userId: "demo-endocrinologist-user",
       name: "Dev Patel",
-      email: "endocrinology@caresync.dev",
+      email: "prachi639220+endocrinology@gmail.com",
       phone: "+91 99090 55773",
       specialization: "Endocrinology",
       qualifications: "MBBS, MD, DM (Endocrinology)",
@@ -164,8 +164,8 @@ async function main() {
 
   for (const item of additionalDoctors) {
     const user = await prisma.user.upsert({
-      where: { email: item.email },
-      update: { name: item.name, phone: item.phone, role: "DOCTOR", passwordHash },
+      where: { id: item.userId },
+      update: { name: item.name, email: item.email, phone: item.phone, role: "DOCTOR", passwordHash },
       create: { id: item.userId, name: item.name, email: item.email, phone: item.phone, role: "DOCTOR", passwordHash },
     });
     await prisma.doctorProfile.upsert({

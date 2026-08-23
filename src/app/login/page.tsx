@@ -36,7 +36,7 @@ function LoginForm() {
         <button className="button button-primary" disabled={loading}>{loading ? <><LoaderCircle size={18} className="spin" /> Signing in...</> : <>Sign in <ArrowRight size={18} /></>}</button>
       </form>
       <p className="auth-switch">New to CareSync? <Link href="/register">Create a patient account</Link></p>
-      <div className="demo-box"><strong>Demo access</strong><br />Patient: patient@caresync.dev<br />Doctor: doctor@caresync.dev<br />Admin: admin@caresync.dev<br />Password for all: <strong>Demo@123</strong></div>
+      <div className="demo-box"><strong>Demo access</strong><br />Patient: patient@caresync.dev<br />Doctor: prachi639220+doctor@gmail.com<br />Admin: prachi639220@gmail.com<br />Password for all: <strong>Demo@123</strong></div>
     </div>
   );
 }
