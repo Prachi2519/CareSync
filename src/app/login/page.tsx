@@ -33,7 +33,7 @@ function LoginForm() {
         {error && <div className="form-error" role="alert">{error}</div>}
         <div className="field"><label htmlFor="email">Email address</label><input id="email" name="email" type="email" autoComplete="email" required placeholder="you@example.com" /></div>
         <div className="field"><label htmlFor="password">Password</label><input id="password" name="password" type="password" autoComplete="current-password" required minLength={8} placeholder="Your password" /></div>
-        <button className="button button-primary" disabled={loading}>{loading ? <><LoaderCircle size={18} className="spin" /> Signing in...</> : <>Sign in <ArrowRight size={18} /></>}</button>
+        <button className="button button-primary" disabled={loading}>{loading ? <><LoaderCircle size={18} className="spin" /> Signing in…</> : <>Sign in <ArrowRight size={18} /></>}</button>
       </form>
       <p className="auth-switch">New to CareSync? <Link href="/register">Create a patient account</Link></p>
     </div>

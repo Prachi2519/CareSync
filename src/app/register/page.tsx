@@ -31,7 +31,7 @@ export default function RegisterPage() {
           <div className="field"><label htmlFor="email">Email address</label><input id="email" name="email" type="email" autoComplete="email" required placeholder="you@example.com" /></div>
           <div className="field"><label htmlFor="phone">Phone number <span style={{ fontWeight: 400, color: "var(--muted)" }}>(optional)</span></label><input id="phone" name="phone" type="tel" autoComplete="tel" placeholder="+91 98765 43210" /></div>
           <div className="field"><label htmlFor="password">Password</label><input id="password" name="password" type="password" autoComplete="new-password" minLength={8} required placeholder="At least 8 characters" /><small>Use a unique password with at least 8 characters.</small></div>
-          <button className="button button-primary" disabled={loading}>{loading ? <><LoaderCircle size={18} /> Creating account...</> : <>Create account <ArrowRight size={18} /></>}</button>
+          <button className="button button-primary" disabled={loading}>{loading ? <><LoaderCircle size={18} /> Creating account…</> : <>Create account <ArrowRight size={18} /></>}</button>
         </form>
         <p className="auth-switch">Already have an account? <Link href="/login">Sign in</Link></p>
       </div></section>
