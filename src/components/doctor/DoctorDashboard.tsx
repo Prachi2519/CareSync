@@ -139,11 +139,11 @@ export function DoctorDashboard() {
         </div>
       )}
 
-      <div className="stat-grid doctor-stat-grid" aria-label="Clinical summary">
-        <div className="stat-card"><span className="stat-icon"><UsersRound size={21} aria-hidden="true" /></span><span className="stat-copy"><strong>{today.length}</strong><span>Visits today</span></span></div>
-        <div className="stat-card"><span className="stat-icon"><CalendarClock size={21} aria-hidden="true" /></span><span className="stat-copy"><strong>{scheduled.length}</strong><span>Upcoming</span></span></div>
-        <div className="stat-card"><span className="stat-icon doctor-danger-icon"><AlertTriangle size={21} aria-hidden="true" /></span><span className="stat-copy"><strong>{highUrgency.length}</strong><span>High priority</span></span></div>
-        <div className="stat-card"><span className="stat-icon doctor-success-icon"><CheckCircle2 size={21} aria-hidden="true" /></span><span className="stat-copy"><strong>{patientsSeen.length}</strong><span>Patients seen</span></span></div>
+      <div className="stat-grid doctor-stat-grid" aria-label="Clinical summary" aria-busy={loading}>
+        <div className="stat-card"><span className="stat-icon"><UsersRound size={21} aria-hidden="true" /></span><span className="stat-copy"><strong>{loading ? <span className="stat-value-skeleton" /> : today.length}</strong><span>Visits today</span></span></div>
+        <div className="stat-card"><span className="stat-icon"><CalendarClock size={21} aria-hidden="true" /></span><span className="stat-copy"><strong>{loading ? <span className="stat-value-skeleton" /> : scheduled.length}</strong><span>Upcoming</span></span></div>
+        <div className="stat-card"><span className="stat-icon doctor-danger-icon"><AlertTriangle size={21} aria-hidden="true" /></span><span className="stat-copy"><strong>{loading ? <span className="stat-value-skeleton" /> : highUrgency.length}</strong><span>High priority</span></span></div>
+        <div className="stat-card"><span className="stat-icon doctor-success-icon"><CheckCircle2 size={21} aria-hidden="true" /></span><span className="stat-copy"><strong>{loading ? <span className="stat-value-skeleton" /> : patientsSeen.length}</strong><span>Patients seen</span></span></div>
       </div>
 
       {!loading && nextAppointment && (

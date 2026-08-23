@@ -358,11 +358,11 @@ export function AdminDashboard() {
         </div>
       )}
 
-      <div className="stat-grid admin-stat-grid" aria-label="Clinic summary">
-        <div className="stat-card"><span className="stat-icon"><UsersRound size={21} aria-hidden="true" /></span><span className="stat-copy"><strong>{doctors.length}</strong><span>Active doctors</span></span></div>
-        <div className="stat-card"><span className="stat-icon"><Clock3 size={21} aria-hidden="true" /></span><span className="stat-copy"><strong>{todayAppointments.length}</strong><span>Visits today</span></span></div>
-        <div className="stat-card"><span className="stat-icon"><CalendarDays size={21} aria-hidden="true" /></span><span className="stat-copy"><strong>{upcoming.length}</strong><span>Upcoming visits</span></span></div>
-        <div className="stat-card"><span className="stat-icon"><CalendarOff size={21} aria-hidden="true" /></span><span className="stat-copy"><strong>{upcomingLeaveDays}</strong><span>Upcoming leave days</span></span></div>
+      <div className="stat-grid admin-stat-grid" aria-label="Clinic summary" aria-busy={loading}>
+        <div className="stat-card"><span className="stat-icon"><UsersRound size={21} aria-hidden="true" /></span><span className="stat-copy"><strong>{loading ? <span className="stat-value-skeleton" /> : doctors.length}</strong><span>Active doctors</span></span></div>
+        <div className="stat-card"><span className="stat-icon"><Clock3 size={21} aria-hidden="true" /></span><span className="stat-copy"><strong>{loading ? <span className="stat-value-skeleton" /> : todayAppointments.length}</strong><span>Visits today</span></span></div>
+        <div className="stat-card"><span className="stat-icon"><CalendarDays size={21} aria-hidden="true" /></span><span className="stat-copy"><strong>{loading ? <span className="stat-value-skeleton" /> : upcoming.length}</strong><span>Upcoming visits</span></span></div>
+        <div className="stat-card"><span className="stat-icon"><CalendarOff size={21} aria-hidden="true" /></span><span className="stat-copy"><strong>{loading ? <span className="stat-value-skeleton" /> : upcomingLeaveDays}</strong><span>Upcoming leave days</span></span></div>
       </div>
 
       <div className="admin-command-grid">

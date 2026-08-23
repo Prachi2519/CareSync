@@ -52,10 +52,10 @@ export function PatientDashboard() {
     <>
       <div className="page-header"><div><p className="eyebrow">Patient portal</p><h1>Your care, in one place.</h1><p>Book a visit, prepare in advance, and keep your follow-ups clear.</p></div><Link href="#doctors" className="button button-primary"><Stethoscope size={18} /> Find a doctor</Link></div>
       {message && <div className="form-info" role="status" style={{ marginBottom: 20 }}>{message}</div>}
-      <div className="stat-grid">
-        <div className="stat-card"><span className="stat-icon"><CalendarDays size={21} /></span><span className="stat-copy"><strong>{upcoming.length}</strong><span>Upcoming visits</span></span></div>
-        <div className="stat-card"><span className="stat-icon"><UserRoundCheck size={21} /></span><span className="stat-copy"><strong>{completed.length}</strong><span>Completed visits</span></span></div>
-        <div className="stat-card"><span className="stat-icon"><Stethoscope size={21} /></span><span className="stat-copy"><strong>{specialties.length}</strong><span>Specialties</span></span></div>
+      <div className="stat-grid" aria-busy={loading}>
+        <div className="stat-card"><span className="stat-icon"><CalendarDays size={21} /></span><span className="stat-copy"><strong>{loading ? <span className="stat-value-skeleton" /> : upcoming.length}</strong><span>Upcoming visits</span></span></div>
+        <div className="stat-card"><span className="stat-icon"><UserRoundCheck size={21} /></span><span className="stat-copy"><strong>{loading ? <span className="stat-value-skeleton" /> : completed.length}</strong><span>Completed visits</span></span></div>
+        <div className="stat-card"><span className="stat-icon"><Stethoscope size={21} /></span><span className="stat-copy"><strong>{loading ? <span className="stat-value-skeleton" /> : specialties.length}</strong><span>Specialties</span></span></div>
         <div className="stat-card"><span className="stat-icon"><Clock3 size={21} /></span><span className="stat-copy"><strong>{format(addDays(new Date(), 1), "EEE")}</strong><span>Next slots available</span></span></div>
       </div>
 
