@@ -109,7 +109,7 @@ export async function enqueueMedicationReminders() {
   return reminders.length;
 }
 
-export async function processNotificationJobs(limit = 50) {
+export async function processNotificationJobs(limit = 50, appointmentId?: string) {
   const stale = addMinutes(new Date(), -15);
   await db.notificationJob.updateMany({
     where: { status: "PROCESSING", updatedAt: { lt: stale } },
@@ -117,6 +117,7 @@ export async function processNotificationJobs(limit = 50) {
   });
   const jobs = await db.notificationJob.findMany({
     where: {
+      ...(appointmentId ? { appointmentId } : {}),
       status: { in: ["PENDING", "FAILED"] },
       nextAttemptAt: { lte: new Date() },
       attempts: { lt: 5 },

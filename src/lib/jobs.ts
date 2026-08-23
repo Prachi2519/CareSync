@@ -1,4 +1,6 @@
 import { Prisma } from "@prisma/client";
+import { after } from "next/server";
+import { processNotificationJobs } from "@/lib/job-worker";
 
 type AppointmentForJobs = {
   id: string;
@@ -10,6 +12,12 @@ type AppointmentForJobs = {
 };
 
 type LifecycleAction = "BOOKING" | "RESCHEDULE" | "CANCELLATION";
+
+export function scheduleQueuedNotificationDelivery(appointmentId: string) {
+  after(async () => {
+    await processNotificationJobs(10, appointmentId);
+  });
+}
 
 export async function queueLifecycleJobs(
   tx: Prisma.TransactionClient,
@@ -76,4 +84,5 @@ export async function queueLifecycleJobs(
     },
   ]);
   await tx.notificationJob.createMany({ data });
+  scheduleQueuedNotificationDelivery(appointment.id);
 }
