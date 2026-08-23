@@ -650,6 +650,11 @@ h3 { color: var(--text-strong); font-size: 20px; line-height: 1.25; }
   .admin-leave-form { grid-template-columns: 1fr 1fr; }
   .admin-leave-reason { grid-column: 1 / -1; }
   .admin-leave-form .button { justify-self: start; }
+  .admin-schedule-toolbar { align-items: stretch; flex-direction: column; }
+  .admin-schedule-toolbar .search-input { max-width: none; }
+  .admin-filter-group { flex-wrap: nowrap; overflow-x: auto; padding: 2px 1px 6px; scrollbar-width: none; }
+  .admin-filter-group::-webkit-scrollbar { display: none; }
+  .admin-filter-group button { flex: 0 0 auto; }
   .integration-layout { grid-template-columns: 1fr; align-items: stretch; }
   .integration-layout > .button { justify-self: start; }
 }
