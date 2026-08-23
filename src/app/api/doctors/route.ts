@@ -10,6 +10,7 @@ export async function GET(request: Request) {
     const { searchParams } = new URL(request.url);
     const specialization = searchParams.get("specialization")?.trim();
     const doctors = await db.doctorProfile.findMany({
+      omit: { notificationEmail: true },
       where: {
         active: true,
         ...(specialization
