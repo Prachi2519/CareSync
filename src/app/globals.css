@@ -190,6 +190,17 @@ h3 { color: var(--text-strong); font-size: 20px; line-height: 1.25; }
 .auth-switch a { color: var(--primary-dark); font-weight: 700; }
 .demo-box { margin-top: 24px; padding: 15px; border: 1px dashed var(--border); border-radius: 12px; background: var(--background); color: var(--muted); font-size: 14px; }
 .demo-box strong { color: var(--text-strong); }
+.demo-access { margin-top: 22px; padding-top: 20px; border-top: 1px solid var(--border); }
+.demo-access-heading { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 11px; }
+.demo-access-heading span { color: var(--text-strong); font-size: 13px; font-weight: 750; }
+.demo-access-heading small { color: var(--muted); font-size: 12px; }
+.demo-access-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.demo-role { min-width: 0; display: grid; grid-template-columns: auto 1fr auto; align-items: center; gap: 9px; padding: 12px; border: 1px solid var(--border); border-radius: 11px; color: var(--primary-dark); background: var(--background); text-align: left; transition: border-color .18s ease, background .18s ease, box-shadow .18s ease, transform .18s ease; }
+.demo-role:hover { border-color: #99d3db; background: var(--primary-soft); box-shadow: 0 8px 22px rgba(5, 67, 80, .08); transform: translateY(-1px); }
+.demo-role:focus-visible { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(8,127,155,.13); }
+.demo-role span { min-width: 0; display: grid; gap: 2px; }
+.demo-role strong { overflow: hidden; color: var(--text-strong); font-size: 13px; text-overflow: ellipsis; white-space: nowrap; }
+.demo-role small { overflow: hidden; color: var(--muted); font-size: 11px; text-overflow: ellipsis; white-space: nowrap; }
 
 .portal-shell { min-height: 100vh; display: grid; grid-template-columns: 248px 1fr; }
 .sidebar { position: sticky; top: 0; height: 100vh; display: flex; flex-direction: column; padding: 22px 16px 16px; border-right: 1px solid var(--border); background: #fbfdfd; }
