@@ -2,15 +2,20 @@
 
 import { format } from "date-fns";
 import {
+  BrainCircuit,
   CalendarDays,
   CalendarOff,
   CalendarRange,
   CheckCircle2,
+  ChevronDown,
   ChevronRight,
   Clock3,
   Edit3,
+  FileText,
   LoaderCircle,
   Mail,
+  Phone,
+  Pill,
   Plus,
   Search,
   Stethoscope,
@@ -44,7 +49,13 @@ type Appointment = {
   startTime: string;
   endTime: string;
   cancellationReason?: string | null;
-  patient: { name: string; email: string };
+  symptoms: string;
+  preVisitSummary?: string | null;
+  suggestedQuestions?: string | null;
+  postVisitNotes?: string | null;
+  prescription?: string | null;
+  postVisitSummary?: string | null;
+  patient: { name: string; email: string; phone?: string | null };
   doctor: { id: string; specialization: string; user: { name: string } };
 };
 
@@ -88,6 +99,26 @@ function appointmentSort(left: Appointment, right: Appointment) {
   return leftUpcoming
     ? new Date(left.startTime).getTime() - new Date(right.startTime).getTime()
     : new Date(right.startTime).getTime() - new Date(left.startTime).getTime();
+}
+
+function parseQuestions(value?: string | null) {
+  if (!value) return [];
+  try {
+    const parsed = JSON.parse(value);
+    return Array.isArray(parsed) ? parsed.filter((item): item is string => typeof item === "string") : [];
+  } catch {
+    return [];
+  }
+}
+
+function parsePostVisitSummary(value?: string | null) {
+  if (!value) return null;
+  try {
+    const parsed = JSON.parse(value) as { summary?: string; medicationSchedule?: string; followUpSteps?: string[] };
+    return parsed && typeof parsed === "object" ? parsed : null;
+  } catch {
+    return { summary: value };
+  }
 }
 
 export function AdminDashboard() {
@@ -466,16 +497,58 @@ function AddDoctorForm({ saving, onSubmit, onCancel }: { saving: boolean; onSubm
 }
 
 function AppointmentList({ appointments, emptyMessage, showDoctor = false }: { appointments: Appointment[]; emptyMessage: string; showDoctor?: boolean }) {
+  const [expandedId, setExpandedId] = useState<string | null>(null);
   if (!appointments.length) return <div className="admin-compact-empty"><CalendarDays size={19} aria-hidden="true" /><span>{emptyMessage}</span></div>;
   return (
-    <div className="admin-schedule-list">{appointments.map((appointment) => (
-      <article className="admin-schedule-card" key={appointment.id}>
+    <div className="admin-schedule-list">{appointments.map((appointment) => {
+      const expanded = expandedId === appointment.id;
+      const questions = parseQuestions(appointment.suggestedQuestions);
+      const postVisit = parsePostVisitSummary(appointment.postVisitSummary);
+      const detailsId = `admin-appointment-${appointment.id}`;
+      return (
+      <article className={`admin-schedule-card ${expanded ? "expanded" : ""}`} key={appointment.id}>
         <time className="admin-schedule-date" dateTime={appointment.startTime}><span>{format(new Date(appointment.startTime), "MMM")}</span><strong>{format(new Date(appointment.startTime), "d")}</strong><small>{format(new Date(appointment.startTime), "EEE")}</small></time>
         <div className="admin-schedule-main"><strong>{appointment.patient.name}</strong><span>{appointment.patient.email}</span>{showDoctor && <small>Dr. {appointment.doctor.user.name} · {appointment.doctor.specialization}</small>}</div>
         <div className="admin-schedule-time"><strong>{format(new Date(appointment.startTime), "h:mm a")}</strong><span>to {format(new Date(appointment.endTime), "h:mm a")}</span></div>
         <div className="admin-schedule-status"><StatusBadge value={appointment.status} />{appointment.urgency && appointment.status === "SCHEDULED" && <StatusBadge value={appointment.urgency} />}</div>
         {appointment.cancellationReason && <p className="admin-cancellation-note">{appointment.cancellationReason}</p>}
+        <button type="button" className="admin-appointment-expand" onClick={() => setExpandedId(expanded ? null : appointment.id)} aria-expanded={expanded} aria-controls={detailsId}>
+          {expanded ? "Hide details" : "View full details"}<ChevronDown size={17} aria-hidden="true" />
+        </button>
+        {expanded && <div className="admin-appointment-detail" id={detailsId}>
+          <div className="admin-patient-contact">
+            <div><span>Patient</span><strong>{appointment.patient.name}</strong></div>
+            <div><span>Email</span><a href={`mailto:${appointment.patient.email}`}>{appointment.patient.email}</a></div>
+            <div><span>Phone</span>{appointment.patient.phone ? <a href={`tel:${appointment.patient.phone}`}>{appointment.patient.phone}</a> : <strong>Not provided</strong>}</div>
+            <div><span>Appointment ID</span><strong>{appointment.id}</strong></div>
+          </div>
+
+          <section className="admin-clinical-section">
+            <div className="admin-detail-heading"><FileText size={18} aria-hidden="true" /><div><h4>Patient concerns</h4><p>Symptoms shared during booking</p></div></div>
+            <p className="admin-detail-copy">{appointment.symptoms}</p>
+          </section>
+
+          <section className="admin-clinical-section admin-ai-section">
+            <div className="admin-detail-heading"><BrainCircuit size={18} aria-hidden="true" /><div><h4>AI pre-visit brief</h4><p>Decision support only — not a diagnosis</p></div><StatusBadge value={appointment.urgency} /></div>
+            <p className="admin-detail-copy">{appointment.preVisitSummary || "No AI summary was generated for this appointment."}</p>
+            {questions.length > 0 && <div className="admin-question-block"><strong>Suggested questions for the doctor</strong><ol>{questions.map((question) => <li key={question}>{question}</li>)}</ol></div>}
+          </section>
+
+          {(appointment.postVisitNotes || appointment.prescription || postVisit) && <section className="admin-clinical-section admin-aftercare-section">
+            <div className="admin-detail-heading"><Pill size={18} aria-hidden="true" /><div><h4>Visit outcome</h4><p>Doctor notes, prescription, and patient summary</p></div></div>
+            <div className="admin-outcome-grid">
+              {appointment.postVisitNotes && <div><span>Clinical notes</span><p>{appointment.postVisitNotes}</p></div>}
+              {appointment.prescription && <div><span>Prescription</span><p>{appointment.prescription}</p></div>}
+              {postVisit?.summary && <div><span>Patient-friendly summary</span><p>{postVisit.summary}</p></div>}
+              {postVisit?.medicationSchedule && <div><span>Medication schedule</span><p>{postVisit.medicationSchedule}</p></div>}
+            </div>
+            {postVisit?.followUpSteps && postVisit.followUpSteps.length > 0 && <div className="admin-question-block"><strong>Follow-up steps</strong><ol>{postVisit.followUpSteps.map((step) => <li key={step}>{step}</li>)}</ol></div>}
+          </section>}
+
+          {!appointment.postVisitNotes && !appointment.prescription && !postVisit && <div className="admin-detail-pending"><Clock3 size={17} aria-hidden="true" /><span>Post-visit notes and prescription will appear here after the doctor completes the consultation.</span></div>}
+          <p className="admin-privacy-note"><Phone size={15} aria-hidden="true" /> Clinical information is shown for authorised clinic operations. Handle it according to clinic privacy policy.</p>
+        </div>}
       </article>
-    ))}</div>
+    )})}</div>
   );
 }
