@@ -49,9 +49,10 @@ button:disabled { cursor: not-allowed; opacity: .62; }
 .container { width: min(1160px, calc(100% - 40px)); margin-inline: auto; }
 .public-header { position: sticky; top: 0; z-index: 20; background: rgba(244, 251, 252, .9); border-bottom: 1px solid rgba(202, 227, 232, .75); backdrop-filter: blur(16px); }
 .header-inner { min-height: 76px; display: flex; align-items: center; gap: 32px; }
-.brand { display: inline-flex; align-items: center; gap: 10px; color: var(--text-strong); font-size: 22px; font-weight: 700; letter-spacing: -.02em; }
+.brand { min-height: 44px; display: inline-flex; align-items: center; gap: 10px; color: var(--text-strong); font-size: 22px; font-weight: 700; letter-spacing: -.02em; }
 .brand-mark { width: 40px; height: 40px; display: grid; place-items: center; color: white; background: var(--primary); border-radius: 12px; box-shadow: 0 7px 18px rgba(8, 127, 155, .2); }
 .public-nav { margin-left: auto; display: flex; align-items: center; gap: 30px; color: var(--muted); }
+.public-nav a { min-height: 44px; display: inline-flex; align-items: center; }
 .public-nav a:hover { color: var(--primary-dark); }
 .header-actions { display: flex; gap: 10px; }
 
@@ -66,7 +67,7 @@ button:disabled { cursor: not-allowed; opacity: .62; }
 .button-ghost { color: var(--text); background: transparent; }
 .button-ghost:hover:not(:disabled) { background: var(--surface-alt); }
 .button-danger { color: var(--danger); background: #fff2f1; border-color: #f1cecb; }
-.button-small { min-height: 38px; padding: 7px 13px; font-size: 14px; }
+.button-small { min-height: 44px; padding: 7px 13px; font-size: 14px; }
 .icon-button { width: 44px; height: 44px; display: grid; place-items: center; flex: none; border: 0; border-radius: 12px; color: var(--muted); background: transparent; }
 .icon-button:hover { color: var(--primary-dark); background: var(--surface-alt); }
 
@@ -383,7 +384,7 @@ h3 { color: var(--text-strong); font-size: 20px; line-height: 1.25; }
 .doctor-patient-identity { min-width: 0; }
 .doctor-patient-identity h3 { margin: 0 0 3px; }
 .doctor-contact-list { display: flex; gap: 5px 12px; flex-wrap: wrap; }
-.doctor-contact-list a { min-width: 0; display: inline-flex; align-items: center; gap: 5px; color: var(--muted); font-size: 12px; overflow-wrap: anywhere; }
+.doctor-contact-list a { min-width: 0; min-height: 44px; display: inline-flex; align-items: center; gap: 5px; color: var(--muted); font-size: 12px; overflow-wrap: anywhere; }
 .doctor-contact-list a:hover { color: var(--primary-dark); }
 .doctor-patient-total { min-height: 32px; display: inline-flex; align-items: center; gap: 5px; padding: 5px 9px; border-radius: 999px; color: var(--primary-dark); background: var(--primary-soft); font-size: 12px; font-weight: 700; white-space: nowrap; }
 .doctor-patient-stats { display: grid; grid-template-columns: .72fr .72fr 1.56fr; gap: 1px; margin: 16px 0 12px; overflow: hidden; border: 1px solid var(--border); border-radius: 11px; background: var(--border); }
