@@ -159,6 +159,13 @@ h3 { color: var(--text-strong); font-size: 20px; line-height: 1.25; }
 .form-success { color: #076447; background: #e7f8ef; border: 1px solid #bce8d2; }
 .form-info { color: var(--primary-dark); background: var(--primary-soft); border: 1px solid #bfe7ed; }
 .completed-care-plan { display: grid; gap: 14px; }
+.high-priority-alert { margin-bottom: 20px; color: var(--danger); background: color-mix(in srgb, var(--danger) 8%, white); border-color: color-mix(in srgb, var(--danger) 22%, transparent); }
+.detail-feedback { margin-bottom: 18px; }
+.completed-message { display: flex; align-items: center; gap: 7px; }
+.optional-label { color: var(--muted); font-weight: 400; }
+.compact-textarea { min-height: 85px; }
+.field-counter { display: flex; justify-content: space-between; gap: 12px; }
+.field-counter span { color: var(--text); font-variant-numeric: tabular-nums; }
 .completed-care-plan > div:not(.form-success) { padding: 15px; border: 1px solid var(--border); border-radius: 12px; background: var(--background); }
 .completed-care-plan strong { display: block; margin-bottom: 5px; color: var(--text-strong); }
 .completed-care-plan p { margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; }
