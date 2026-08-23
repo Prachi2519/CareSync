@@ -715,7 +715,9 @@ h3 { color: var(--text-strong); font-size: 20px; line-height: 1.25; }
   .admin-doctor-row { grid-template-columns: 1fr 1fr; }
   .admin-doctor-name, .admin-doctor-row .appointment-actions { grid-column: 1 / -1; }
   .working-day { grid-template-columns: 80px 1fr 1fr; }
-  .admin-doctor-list { grid-template-columns: 1fr; }
+  .admin-directory-panel .admin-doctor-list { display: flex; max-height: none; min-height: 0; overflow-x: auto; overflow-y: hidden; padding: 0 18px 18px; scroll-padding-inline: 18px; scroll-snap-type: x proximity; scrollbar-width: none; }
+  .admin-directory-panel .admin-doctor-list::-webkit-scrollbar { display: none; }
+  .admin-doctor-select { flex: 0 0 min(268px, calc(100vw - 68px)); min-height: 88px; scroll-snap-align: start; border-color: var(--border); background: var(--background); }
   .admin-doctor-hero { align-items: stretch; flex-direction: column; }
   .admin-doctor-hero .button { align-self: flex-start; }
   .admin-profile-strip { grid-template-columns: 1fr 1fr; }
