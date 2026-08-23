@@ -567,6 +567,13 @@ h3 { color: var(--text-strong); font-size: 20px; line-height: 1.25; }
 .settings-feedback:empty { display: none; }
 .settings-feedback .form-success, .settings-feedback .form-error { display: flex; align-items: flex-start; gap: 9px; }
 .settings-feedback svg { flex: none; margin-top: 1px; }
+.profile-notice { margin-top: 20px; }
+.delivery-list { display: grid; grid-template-columns: repeat(3, 1fr); overflow: hidden; border: 1px solid var(--border); border-radius: 11px; }
+.delivery-list > div { min-width: 0; padding: 18px; }
+.delivery-list > div + div { border-left: 1px solid var(--border); }
+.delivery-list span { display: block; margin-bottom: 16px; color: #8da2a7; font-size: 11px; font-weight: 800; letter-spacing: .08em; }
+.delivery-list strong { display: block; color: var(--text-strong); }
+.delivery-list p { margin: 5px 0 0; color: var(--muted); }
 .integration-card { display: flex; flex-direction: column; }
 .integration-card > .button { align-self: flex-start; margin-top: 18px; }
 .integration-status { display: flex; align-items: flex-start; gap: 12px; padding: 16px; border: 1px solid var(--border); border-radius: 13px; background: var(--background); }
@@ -698,6 +705,8 @@ h3 { color: var(--text-strong); font-size: 20px; line-height: 1.25; }
   .admin-working-hours-editor .working-day { grid-template-columns: 92px 1fr 1fr; }
   .notification-title-row, .notification-recovery { align-items: flex-start; flex-direction: column; }
   .notification-recovery .button { width: 100%; }
+  .delivery-list { grid-template-columns: 1fr; }
+  .delivery-list > div + div { border-top: 1px solid var(--border); border-left: 0; }
 }
 
 @media (prefers-reduced-motion: reduce) {

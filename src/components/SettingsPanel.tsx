@@ -137,7 +137,7 @@ export function SettingsPanel({ user }: { user: { name: string; email: string; p
             <div className="metadata-row"><span>Phone</span><strong>{user.phone || "Not provided"}</strong></div>
             <div className="metadata-row"><span>Portal role</span><strong>{user.role.toLowerCase()}</strong></div>
           </div>
-          <div className="notice" style={{ marginTop: 20 }}>Role changes and doctor profile details are managed by a clinic administrator.</div>
+          <div className="notice profile-notice">Role changes and doctor profile details are managed by a clinic administrator.</div>
         </section>
 
         <section className="panel span-6 integration-card">
@@ -222,10 +222,10 @@ export function SettingsPanel({ user }: { user: { name: string; email: string; p
             <div><h2>What CareSync sends</h2><p>Private, timely updates throughout the care journey</p></div>
             <BellRing size={22} aria-hidden="true" />
           </div>
-          <div className="feature-grid">
-            <div className="notice"><strong>Booking updates</strong><br />Confirmations, reschedules, and cancellations for both participants.</div>
-            <div className="notice"><strong>Visit reminder</strong><br />A reminder is prepared around 24 hours before scheduled visits.</div>
-            <div className="notice"><strong>Medication reminder</strong><br />Due reminders follow the clinician’s saved frequency and duration.</div>
+          <div className="delivery-list">
+            <div><span>01</span><strong>Booking updates</strong><p>Confirmations, reschedules, and cancellations for both participants.</p></div>
+            <div><span>02</span><strong>Visit reminder</strong><p>A reminder is prepared around 24 hours before scheduled visits.</p></div>
+            <div><span>03</span><strong>Medication reminder</strong><p>Due reminders follow the clinician’s saved frequency and duration.</p></div>
           </div>
         </section>
       </div>
