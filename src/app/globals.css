@@ -172,6 +172,12 @@ h3 { color: var(--text-strong); font-size: 20px; line-height: 1.25; }
 .completed-care-plan { display: grid; gap: 14px; }
 .high-priority-alert { margin-bottom: 20px; color: var(--danger); background: color-mix(in srgb, var(--danger) 8%, white); border-color: color-mix(in srgb, var(--danger) 22%, transparent); }
 .detail-feedback { margin-bottom: 18px; }
+.detail-status { align-self: flex-start; }
+.aftercare-summary { border-color: var(--accent); background: var(--accent-soft); }
+.medication-reminder-note { display: flex; align-items: center; gap: 8px; margin-top: 15px; }
+.reschedule-slots { grid-template-columns: repeat(2, 1fr); margin-top: 12px; }
+.no-slots-copy { margin-top: 12px; color: var(--muted); font-size: 14px; }
+.full-width-action, .integration-settings-action { width: 100%; margin-top: 14px; }
 .completed-message { display: flex; align-items: center; gap: 7px; }
 .optional-label { color: var(--muted); font-weight: 400; }
 .compact-textarea { min-height: 85px; }
