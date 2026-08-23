@@ -27,6 +27,7 @@ export async function queueLifecycleJobs(
   const calendarAction = action === "CANCELLATION" ? "DELETE" : action === "RESCHEDULE" ? "UPDATE" : "CREATE";
   const participants = [
     {
+      role: "PATIENT" as const,
       userId: appointment.patient.id,
       name: appointment.patient.name,
       email: appointment.patient.email,
@@ -35,6 +36,7 @@ export async function queueLifecycleJobs(
       calendarTitle: `Appointment with Dr. ${appointment.doctor.user.name}`,
     },
     {
+      role: "DOCTOR" as const,
       userId: appointment.doctor.user.id,
       name: appointment.doctor.user.name,
       email: appointment.doctor.user.email,
@@ -52,12 +54,19 @@ export async function queueLifecycleJobs(
       type: action,
       recipient: person.email,
       subject:
-        action === "BOOKING"
-          ? `Appointment confirmed with ${person.counterpart}`
-          : action === "RESCHEDULE"
-            ? `Appointment rescheduled with ${person.counterpart}`
-            : `Appointment cancelled with ${person.counterpart}`,
+        person.role === "DOCTOR"
+          ? action === "BOOKING"
+            ? `New appointment: ${person.counterpart}`
+            : action === "RESCHEDULE"
+              ? `Appointment rescheduled: ${person.counterpart}`
+              : `Appointment cancelled: ${person.counterpart}`
+          : action === "BOOKING"
+            ? `Appointment confirmed with ${person.counterpart}`
+            : action === "RESCHEDULE"
+              ? `Appointment rescheduled with ${person.counterpart}`
+              : `Appointment cancelled with ${person.counterpart}`,
       payload: JSON.stringify({
+        recipientRole: person.role,
         recipientName: person.name,
         counterpart: person.counterpart,
         startTime: appointment.startTime.toISOString(),

@@ -33,6 +33,13 @@ describe("lifecycle notification delivery", () => {
     }, "BOOKING");
 
     expect(createMany).toHaveBeenCalledOnce();
+    const jobs = createMany.mock.calls[0][0].data;
+    const patientEmail = jobs.find((job: { channel: string; userId: string }) => job.channel === "EMAIL" && job.userId === "patient-1");
+    const doctorEmail = jobs.find((job: { channel: string; userId: string }) => job.channel === "EMAIL" && job.userId === "doctor-1");
+    expect(patientEmail.subject).toBe("Appointment confirmed with Dr. Ananya Mehta");
+    expect(JSON.parse(patientEmail.payload).recipientRole).toBe("PATIENT");
+    expect(doctorEmail.subject).toBe("New appointment: Riya Sharma");
+    expect(JSON.parse(doctorEmail.payload).recipientRole).toBe("DOCTOR");
     expect(mocks.after).toHaveBeenCalledOnce();
     expect(mocks.processNotificationJobs).toHaveBeenCalledWith(10, "appointment-123");
   });

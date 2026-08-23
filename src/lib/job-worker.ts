@@ -17,18 +17,20 @@ export async function enqueueUpcomingAppointmentReminders() {
   for (const appointment of appointments) {
     const participants = [
       {
+        role: "PATIENT" as const,
         user: appointment.patient,
         counterpart: `Dr. ${appointment.doctor.user.name}`,
         appointmentUrl: `/patient/appointments/${appointment.id}`,
       },
       {
+        role: "DOCTOR" as const,
         user: appointment.doctor.user,
         counterpart: appointment.patient.name,
         appointmentUrl: `/doctor/appointments/${appointment.id}`,
       },
     ];
     const baseUrl = (process.env.APP_URL || "http://localhost:3000").replace(/\/$/, "");
-    for (const { user, counterpart, appointmentUrl } of participants) {
+    for (const { role, user, counterpart, appointmentUrl } of participants) {
       const reminderKey = appointment.startTime.toISOString();
       const existing = await db.notificationJob.findFirst({
         where: {
@@ -46,8 +48,11 @@ export async function enqueueUpcomingAppointmentReminders() {
           channel: "EMAIL",
           type: "APPOINTMENT_REMINDER",
           recipient: user.email,
-          subject: `Reminder: appointment with ${counterpart} tomorrow`,
+          subject: role === "DOCTOR"
+            ? `Tomorrow's appointment: ${counterpart}`
+            : `Reminder: appointment with ${counterpart} tomorrow`,
           payload: JSON.stringify({
+            recipientRole: role,
             recipientName: user.name,
             counterpart,
             startTime: appointment.startTime.toISOString(),

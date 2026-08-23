@@ -26,6 +26,41 @@ describe("CareSync email templates", () => {
     expect(email.text).toContain("https://caresync.example/patient/appointments/123");
   });
 
+  it("renders distinct patient and doctor booking messages", () => {
+    const patientEmail = renderNotificationEmail("BOOKING", "Appointment confirmed", {
+      recipientRole: "PATIENT",
+      recipientName: "Riya Sharma",
+      counterpart: "Dr. Ananya Mehta",
+    });
+    const doctorEmail = renderNotificationEmail("BOOKING", "New appointment", {
+      recipientRole: "DOCTOR",
+      recipientName: "Ananya Mehta",
+      counterpart: "Riya Sharma",
+    });
+
+    expect(patientEmail.html).toContain("Your visit is booked");
+    expect(patientEmail.html).toContain("Before your visit");
+    expect(doctorEmail.html).toContain("A new visit is on your schedule");
+    expect(doctorEmail.html).toContain("Review patient details");
+    expect(doctorEmail.html).toContain("Hello Dr. Ananya Mehta");
+    expect(doctorEmail.html).not.toContain("Your visit is booked");
+  });
+
+  it.each(["RESCHEDULE", "CANCELLATION", "APPOINTMENT_REMINDER"])(
+    "uses doctor-specific copy for %s emails",
+    (type) => {
+      const email = renderNotificationEmail(type, "Schedule update", {
+        recipientRole: "DOCTOR",
+        recipientName: "Ananya Mehta",
+        counterpart: "Riya Sharma",
+      });
+
+      expect(email.html).toContain("Hello Dr. Ananya Mehta");
+      expect(email.html).toContain("Patient");
+      expect(email.html).not.toContain("your care team");
+    },
+  );
+
   it("escapes user-controlled content before adding it to HTML", () => {
     const email = renderNotificationEmail("CANCELLATION", "Appointment cancelled", {
       recipientName: "<script>alert('x')</script>",

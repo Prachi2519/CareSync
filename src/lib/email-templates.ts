@@ -1,6 +1,7 @@
 type EmailTone = "primary" | "success" | "warning" | "danger";
 
 export type NotificationEmailPayload = {
+  recipientRole?: "PATIENT" | "DOCTOR" | "ADMIN";
   text?: string;
   recipientName?: string;
   counterpart?: string;
@@ -80,8 +81,24 @@ function contentFor(type: string, subject: string, payload: NotificationEmailPay
   const counterpart = payload.counterpart || "your care team";
   const when = formatWhen(payload);
   const appointmentUrl = payload.appointmentUrl || appUrl("/dashboard");
+  const isDoctor = payload.recipientRole === "DOCTOR";
 
   if (type === "BOOKING") {
+    if (isDoctor) {
+      return {
+        subject,
+        preheader: `A new appointment with ${counterpart} has been added to your schedule.`,
+        eyebrow: "New patient appointment",
+        title: "A new visit is on your schedule",
+        greeting: `Hello Dr. ${name},`,
+        paragraphs: ["A patient has booked an appointment with you. Review their submitted symptoms and AI pre-visit summary before the consultation."],
+        badge: "New booking",
+        tone: "primary",
+        details: [{ label: "Patient", value: counterpart }, { label: "Date & time", value: when }],
+        notice: { title: "Prepare for the visit", text: "Open the clinical appointment view to review symptoms, urgency, and suggested questions." },
+        cta: { label: "Review patient details", url: appointmentUrl },
+      };
+    }
     return {
       subject,
       preheader: `Your appointment with ${counterpart} is confirmed.`,
@@ -98,6 +115,20 @@ function contentFor(type: string, subject: string, payload: NotificationEmailPay
   }
 
   if (type === "RESCHEDULE") {
+    if (isDoctor) {
+      return {
+        subject,
+        preheader: `Your appointment with ${counterpart} has moved to a new time.`,
+        eyebrow: "Schedule updated",
+        title: "A patient visit was rescheduled",
+        greeting: `Hello Dr. ${name},`,
+        paragraphs: ["The appointment below has a new time. Your connected Google Calendar will be updated automatically."],
+        badge: "Time changed",
+        tone: "primary",
+        details: [{ label: "Patient", value: counterpart }, { label: "Updated date & time", value: when }],
+        cta: { label: "Review appointment", url: appointmentUrl },
+      };
+    }
     return {
       subject,
       preheader: `Your appointment with ${counterpart} has a new time.`,
@@ -113,6 +144,21 @@ function contentFor(type: string, subject: string, payload: NotificationEmailPay
   }
 
   if (type === "CANCELLATION") {
+    if (isDoctor) {
+      return {
+        subject,
+        preheader: `Your appointment with ${counterpart} has been cancelled.`,
+        eyebrow: "Schedule change",
+        title: "A patient visit was cancelled",
+        greeting: `Hello Dr. ${name},`,
+        paragraphs: ["This appointment is no longer on your schedule. Any connected Calendar event will be removed automatically."],
+        badge: "Cancelled",
+        tone: "danger",
+        details: [{ label: "Patient", value: counterpart }, { label: "Original date & time", value: when }],
+        notice: payload.cancellationReason ? { title: "Reason", text: payload.cancellationReason } : undefined,
+        cta: { label: "View schedule", url: appointmentUrl },
+      };
+    }
     return {
       subject,
       preheader: `Your appointment with ${counterpart} has been cancelled.`,
@@ -131,6 +177,21 @@ function contentFor(type: string, subject: string, payload: NotificationEmailPay
   }
 
   if (type === "APPOINTMENT_REMINDER") {
+    if (isDoctor) {
+      return {
+        subject,
+        preheader: `Your appointment with ${counterpart} is coming up tomorrow.`,
+        eyebrow: "Tomorrow's schedule",
+        title: "A patient visit is coming up",
+        greeting: `Hello Dr. ${name},`,
+        paragraphs: ["Review the patient context now so you can begin the consultation prepared."],
+        badge: "Tomorrow",
+        tone: "warning",
+        details: [{ label: "Patient", value: counterpart }, { label: "Date & time", value: when }],
+        notice: { title: "Clinical context ready", text: "Symptoms, urgency, and the AI pre-visit summary are available in CareSync." },
+        cta: { label: "Review patient details", url: appointmentUrl },
+      };
+    }
     return {
       subject,
       preheader: `Reminder: your appointment with ${counterpart} is coming up.`,
