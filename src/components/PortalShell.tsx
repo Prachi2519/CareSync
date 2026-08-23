@@ -11,7 +11,7 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { ReactNode, useState } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import { Brand } from "@/components/Brand";
 
 type ShellUser = { name: string; email: string; role: "PATIENT" | "DOCTOR" | "ADMIN" };
@@ -41,7 +41,22 @@ export function PortalShell({ user, children }: { user: ShellUser; children: Rea
   const pathname = usePathname();
   const router = useRouter();
   const [loggingOut, setLoggingOut] = useState(false);
+  const [hash, setHash] = useState("");
   const nav = navigation[user.role];
+
+  useEffect(() => {
+    const syncHash = () => setHash(window.location.hash);
+    syncHash();
+    window.addEventListener("hashchange", syncHash);
+    return () => window.removeEventListener("hashchange", syncHash);
+  }, [pathname]);
+
+  function isActive(href: string) {
+    const [itemPath, itemHash] = href.split("#");
+    if (itemPath !== pathname) return false;
+    if (itemHash) return hash === `#${itemHash}`;
+    return !hash;
+  }
 
   async function logout() {
     setLoggingOut(true);
@@ -57,7 +72,7 @@ export function PortalShell({ user, children }: { user: ShellUser; children: Rea
         <nav className="sidebar-nav" aria-label={`${user.role.toLowerCase()} portal navigation`}>
           {nav.map((item) => {
             const Icon = item.icon;
-            const active = item.href.split("#")[0] === pathname;
+            const active = isActive(item.href);
             return (
               <Link key={item.label} href={item.href} className={`sidebar-link ${active ? "active" : ""}`}>
                 <Icon size={20} aria-hidden="true" />
@@ -88,7 +103,7 @@ export function PortalShell({ user, children }: { user: ShellUser; children: Rea
         <nav className="mobile-nav" aria-label="Mobile portal navigation">
           {nav.slice(0, 4).map((item) => {
             const Icon = item.icon;
-            const active = item.href.split("#")[0] === pathname;
+            const active = isActive(item.href);
             return (
               <Link key={item.label} href={item.href} className={active ? "active" : ""}>
                 <Icon size={20} aria-hidden="true" /><span>{item.label}</span>

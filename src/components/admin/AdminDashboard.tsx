@@ -135,6 +135,21 @@ export function AdminDashboard() {
   const [showAddDoctor, setShowAddDoctor] = useState(false);
   const [message, setMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
 
+  useEffect(() => {
+    const syncAdminRoute = () => setShowAddDoctor(window.location.hash === "#add-doctor");
+    syncAdminRoute();
+    window.addEventListener("hashchange", syncAdminRoute);
+    return () => window.removeEventListener("hashchange", syncAdminRoute);
+  }, []);
+
+  function closeAddDoctor() {
+    setShowAddDoctor(false);
+    if (window.location.hash === "#add-doctor") {
+      window.history.replaceState(null, "", window.location.pathname);
+      window.dispatchEvent(new HashChangeEvent("hashchange"));
+    }
+  }
+
   async function load() {
     setLoading(true);
     try {
@@ -238,7 +253,7 @@ export function AdminDashboard() {
     }
     setMessage({ type: "success", text: "Doctor profile created and ready to receive bookings." });
     form.reset();
-    setShowAddDoctor(false);
+    closeAddDoctor();
     await load();
   }
 
@@ -366,7 +381,7 @@ export function AdminDashboard() {
       </div>
 
       <div className="admin-command-grid">
-        <section className="panel admin-directory-panel" aria-labelledby="doctor-directory-title">
+        <section className="panel admin-directory-panel" id="doctors" aria-labelledby="doctor-directory-title">
           <div className="panel-header admin-section-heading"><div><p className="eyebrow">Directory</p><h2 id="doctor-directory-title">Doctors</h2></div><span className="admin-count">{filteredDoctors.length}</span></div>
           <div className="search-input admin-search"><Search size={18} aria-hidden="true" /><input value={doctorQuery} onChange={(event) => setDoctorQuery(event.target.value)} aria-label="Search doctors" placeholder="Search name or specialty" /></div>
           <div className="admin-doctor-list">
@@ -449,7 +464,7 @@ export function AdminDashboard() {
         <AppointmentList appointments={clinicSchedule} emptyMessage="No appointments match these filters." showDoctor />
       </section>
 
-      {showAddDoctor && <AddDoctorForm saving={savingAction === "add-doctor"} onSubmit={addDoctor} onCancel={() => setShowAddDoctor(false)} />}
+      {showAddDoctor && <AddDoctorForm saving={savingAction === "add-doctor"} onSubmit={addDoctor} onCancel={closeAddDoctor} />}
     </>
   );
 }
