@@ -12,11 +12,20 @@ async function main() {
     update: { email: "patient@caresync.dev", passwordHash },
     create: { id: "demo-patient", name: "Riya Sharma", email: "patient@caresync.dev", phone: "+91 98765 43210", role: "PATIENT", passwordHash },
   });
-  await prisma.user.upsert({
-    where: { email: "mgupta810722@gmail.com" },
-    update: { name: "Clinic Admin", role: "ADMIN", passwordHash },
-    create: { id: "demo-admin", name: "Clinic Admin", email: "mgupta810722@gmail.com", role: "ADMIN", passwordHash },
-  });
+  const adminEmail = "mgupta810722@gmail.com";
+  const adminWithTargetEmail = await prisma.user.findUnique({ where: { email: adminEmail } });
+  if (adminWithTargetEmail) {
+    await prisma.user.update({
+      where: { id: adminWithTargetEmail.id },
+      data: { name: "Clinic Admin", role: "ADMIN", passwordHash },
+    });
+  } else {
+    await prisma.user.upsert({
+      where: { id: "demo-admin" },
+      update: { name: "Clinic Admin", email: adminEmail, role: "ADMIN", passwordHash },
+      create: { id: "demo-admin", name: "Clinic Admin", email: adminEmail, role: "ADMIN", passwordHash },
+    });
+  }
   const doctorUser = await prisma.user.upsert({
     where: { id: "demo-doctor-user" },
     update: { email: "mgupta810722+doctor@gmail.com", passwordHash },
