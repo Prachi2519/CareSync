@@ -43,6 +43,10 @@ export function PortalShell({ user, children }: { user: ShellUser; children: Rea
   const [loggingOut, setLoggingOut] = useState(false);
   const [hash, setHash] = useState("");
   const nav = navigation[user.role];
+  const isFocusedWorkflow =
+    pathname.startsWith("/patient/book/") ||
+    pathname.startsWith("/patient/appointments/") ||
+    pathname.startsWith("/doctor/appointments/");
 
   useEffect(() => {
     const syncHash = () => setHash(window.location.hash);
@@ -95,7 +99,7 @@ export function PortalShell({ user, children }: { user: ShellUser; children: Rea
           </button>
         </div>
       </aside>
-      <div className="portal-content">
+      <div className={`portal-content ${isFocusedWorkflow ? "portal-focus-mode" : ""}`}>
         <header className="mobile-portal-header">
           <Brand />
           <div className="mobile-header-actions">
@@ -106,7 +110,7 @@ export function PortalShell({ user, children }: { user: ShellUser; children: Rea
           </div>
         </header>
         <main className="portal-main" id="main-content">{children}</main>
-        <nav className="mobile-nav" aria-label="Mobile portal navigation">
+        {!isFocusedWorkflow && <nav className="mobile-nav" aria-label="Mobile portal navigation">
           {nav.slice(0, 4).map((item) => {
             const Icon = item.icon;
             const active = isActive(item.href);
@@ -116,7 +120,7 @@ export function PortalShell({ user, children }: { user: ShellUser; children: Rea
               </Link>
             );
           })}
-        </nav>
+        </nav>}
       </div>
     </div>
   );
