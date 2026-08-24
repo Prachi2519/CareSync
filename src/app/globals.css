@@ -801,6 +801,8 @@ h3 { color: var(--text-strong); font-size: 20px; line-height: 1.25; }
   .admin-leave-row > span { grid-column: 1 / -1; grid-row: 2; }
   .admin-remove-leave { grid-column: 2; grid-row: 1; }
   .admin-schedule-card { grid-template-columns: 52px minmax(0, 1fr); }
+  .admin-filter-group { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); overflow: visible; padding-bottom: 0; }
+  .admin-filter-group button { width: 100%; }
   .admin-schedule-card { gap: 11px; padding: 14px; }
   .admin-schedule-main span, .admin-schedule-main small, .admin-schedule-time span { font-size: 13px; line-height: 1.45; }
   .admin-schedule-time { grid-column: 2; text-align: left; }
