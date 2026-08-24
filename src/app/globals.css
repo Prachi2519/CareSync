@@ -187,7 +187,7 @@ h3 { color: var(--text-strong); font-size: 20px; line-height: 1.25; }
 .completed-care-plan strong { display: block; margin-bottom: 5px; color: var(--text-strong); }
 .completed-care-plan p { margin: 0; white-space: pre-wrap; overflow-wrap: anywhere; }
 .auth-switch { margin-top: 24px; color: var(--muted); text-align: center; }
-.auth-switch a { color: var(--primary-dark); font-weight: 700; }
+.auth-switch a { min-height: 44px; display: inline-flex; align-items: center; margin-block: -11px; color: var(--primary-dark); font-weight: 700; }
 .demo-box { margin-top: 24px; padding: 15px; border: 1px dashed var(--border); border-radius: 12px; background: var(--background); color: var(--muted); font-size: 14px; }
 .demo-box strong { color: var(--text-strong); }
 .demo-access { margin-top: 22px; padding-top: 20px; border-top: 1px solid var(--border); }
